@@ -33,12 +33,12 @@ const fat: Blob[] = [];
 const placed: { x: number; y: number; s: number }[] = [];
 let guard = 0;
 while (fat.length < specks && guard++ < specks * 40) {
-  const s = 2.2 + r() * r() * 7.5; // size: many small, few large
+  const s = 2.4 + r() * r() * 8.5; // size: many small, few large
   const ang = r() * Math.PI * 2;
   const dist = Math.sqrt(r()) * (R - 14 - s);
   const x = Math.cos(ang) * dist;
   const y = Math.sin(ang) * dist;
-  if (placed.some((p) => Math.hypot(p.x - x, p.y - y) < p.s + s + 1.6)) continue;
+  if (placed.some((p) => Math.hypot(p.x - x, p.y - y) < p.s + s + 1.1)) continue;
   placed.push({ x, y, s });
   // irregular polygon (5–7 points)
   const n = 5 + Math.floor(r() * 3);

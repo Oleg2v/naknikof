@@ -122,16 +122,25 @@ const nav = [
     }, { passive: true });
     hdr.addEventListener('focusin', () => hdr.classList.remove('is-hidden'));
   }
-  // Rotating topbar messages (static list when reduced motion).
+  // Rotating topbar messages: pauses on hover/focus and while off-screen (WCAG 2.2.2); static under reduced motion.
+  const bar = document.querySelector<HTMLElement>('.topbar');
   const items = document.querySelectorAll<HTMLElement>('.topbar__item');
-  if (items.length > 1 && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  if (bar && items.length > 1 && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
     let i = 0;
+    let paused = false;
+    let visible = true;
     items[0].classList.add('is-on');
+    bar.addEventListener('pointerenter', () => (paused = true));
+    bar.addEventListener('pointerleave', () => (paused = false));
+    bar.addEventListener('focusin', () => (paused = true));
+    bar.addEventListener('focusout', () => (paused = false));
+    new IntersectionObserver(([e]) => (visible = e.isIntersecting)).observe(bar);
     setInterval(() => {
+      if (paused || !visible || document.hidden) return;
       items[i].classList.remove('is-on');
       i = (i + 1) % items.length;
       items[i].classList.add('is-on');
-    }, 4000);
+    }, 4500);
   } else items.forEach((el) => el.classList.add('is-on', 'is-static'));
 </script>
 

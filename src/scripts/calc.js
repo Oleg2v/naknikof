@@ -44,6 +44,15 @@ export function initCalc() {
     $('[data-out-nitrite]').textContent = nf(0).format(r.nitriteMg);
     $('[data-out-perkg]').textContent = nf(0).format(r.nitriteMgPerKg);
     $('[data-out-nitrate]').textContent = nf(0).format(r.nitrateMg);
+    const wa = $('[data-calc-wa]');
+    if (wa && i18n.wa) {
+      const text = i18n.wa
+        .replace('{kg}', nf(1).format(r.meatKg))
+        .replace('{salt}', kind === 'n2' ? i18n.n2Name : i18n.n06Name)
+        .replace('{g}', nf(1).format(r.saltG))
+        .replace('{rate}', nf(1).format(r.gPerKg));
+      wa.href = `${i18n.phone}?text=${encodeURIComponent(text)}`;
+    }
   }
 
   form.querySelectorAll('[name="kind"]').forEach((el) => el.addEventListener('change', () => setKind(el.value)));

@@ -148,8 +148,8 @@ const stageKeys = ['casing', 'stuffing', 'smoking', 'slicing'] as const;
   .proc__pick:hover { border-color: currentColor; }
 
   /* ---------- scrolly mode (desktop + motion; class set by JS) ---------- */
-  .proc.is-scrolly .proc__scroll { position: relative; block-size: 460svh; }
-  .proc.is-scrolly .proc__sticky {
+  :global(.motion-ok) .proc .proc__scroll { position: relative; block-size: 460svh; }
+  :global(.motion-ok) .proc .proc__sticky {
     position: sticky;
     inset-block-start: 0;
     block-size: 100svh;
@@ -162,13 +162,13 @@ const stageKeys = ['casing', 'stuffing', 'smoking', 'slicing'] as const;
     max-inline-size: var(--max-w);
     margin-inline: auto;
   }
-  .proc.is-scrolly .proc__stage { display: block; grid-column: 1 / span 8; grid-row: 1; align-self: center; }
-  .proc.is-scrolly .proc__chapters { display: block; position: relative; grid-column: 9 / span 4; grid-row: 1; block-size: 70svh; padding: 0; }
-  .proc.is-scrolly .proc__ch { position: absolute; inset: 0; display: flex; align-items: center; padding: 0; opacity: 0; visibility: hidden; }
-  .proc.is-scrolly .proc__ch:first-child { opacity: 1; visibility: visible; }
-  .proc.is-scrolly .proc__plate { display: none; }
-  .proc.is-scrolly .proc__txt { inline-size: 100%; }
-  .proc.is-scrolly .proc__rail {
+  :global(.motion-ok) .proc .proc__stage { display: block; grid-column: 1 / span 8; grid-row: 1; align-self: center; }
+  :global(.motion-ok) .proc .proc__chapters { display: block; position: relative; grid-column: 9 / span 4; grid-row: 1; block-size: 70svh; padding: 0; }
+  :global(.motion-ok) .proc .proc__ch { position: absolute; inset: 0; display: flex; align-items: center; padding: 0; opacity: 0; visibility: hidden; }
+  :global(.motion-ok) .proc .proc__ch:first-child { opacity: 1; visibility: visible; }
+  :global(.motion-ok) .proc .proc__plate { display: none; }
+  :global(.motion-ok) .proc .proc__txt { inline-size: 100%; }
+  :global(.motion-ok) .proc .proc__rail {
     display: flex;
     position: absolute;
     inset-inline-end: var(--gutter);
@@ -176,7 +176,7 @@ const stageKeys = ['casing', 'stuffing', 'smoking', 'slicing'] as const;
     align-items: center;
     gap: 16px;
   }
-  .proc.is-scrolly .proc__anchor { display: block; position: absolute; inset-inline: 0; block-size: 1px; inset-block-start: calc(var(--i) * 100svh + 30svh); }
+  :global(.motion-ok) .proc .proc__anchor { display: block; position: absolute; inset-inline: 0; block-size: 1px; inset-block-start: calc(var(--i) * 100svh + 30svh); }
   .proc__rail ol { display: flex; gap: 6px; }
   .proc__rail a {
     display: grid;

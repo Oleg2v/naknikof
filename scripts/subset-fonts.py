@@ -8,9 +8,12 @@ Output: public/fonts/<family>-<style>-<lang>.woff2 — ONE file per style per la
   he → Basic Latin + Latin-1 + punctuation + Hebrew + ₪
 Variable axes (Rubik wght) are kept. Layout features needed for numerals, kerning and Hebrew marks are kept.
 
-Usage:  pip install fonttools brotli && python3 scripts/subset-fonts.py
+Usage:  pip install fonttools brotli opentype-feature-freezer && python3 scripts/subset-fonts.py
+
+Bona Nova defaults to old-style figures; lining figures are frozen into the default glyphs
+(opentype-feature-freezer, feature "lnum") so every number on the page lines up, whatever CSS shorthand is used.
 """
-import os
+import os, subprocess, tempfile, shutil
 from fontTools import subset
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -43,6 +46,18 @@ def unicodes(spec):
             out.append(int(part, 16))
     return out
 
+FREEZE = {'BonaNova-Bold.ttf', 'BonaNova-Regular.ttf', 'BonaNova-Italic.ttf'}
+tmp = tempfile.mkdtemp()
+
+def source(src):
+    path = os.path.join(SRC, src)
+    if src not in FREEZE:
+        return path
+    out = os.path.join(tmp, src)
+    if not os.path.exists(out):
+        subprocess.run(['pyftfeatfreeze', '-f', 'lnum', '-S', '-U', '', path, out], check=True, capture_output=True)
+    return out
+
 for name, src in FONTS:
     for lang, spec in RANGES.items():
         opts = subset.Options()
@@ -52,10 +67,12 @@ for name, src in FONTS:
         opts.notdef_outline = True
         opts.hinting = False
         opts.desubroutinize = True
-        font = subset.load_font(os.path.join(SRC, src), opts)
+        font = subset.load_font(source(src), opts)
         s = subset.Subsetter(opts)
         s.populate(unicodes=unicodes(spec))
         s.subset(font)
         dst = os.path.join(OUT, f'{name}-{lang}.woff2')
         subset.save_font(font, dst, opts)
         print(f'{os.path.relpath(dst, ROOT)}: {os.path.getsize(dst) // 1024} KB')
+
+shutil.rmtree(tmp, ignore_errors=True)

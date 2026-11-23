@@ -6,9 +6,7 @@ export function initProcess({ gsap, ScrollTrigger, lenis }) {
   const section = document.querySelector('#process');
   if (!section) return;
   const mq = matchMedia('(min-width: 901px)');
-  if (!mq.matches) return;
-
-  section.classList.add('is-scrolly');
+  if (!mq.matches || !document.documentElement.classList.contains('motion-ok')) return;
   const scroll = section.querySelector('.proc__scroll');
   const svg = section.querySelector('.proc__stage svg');
   const q = (s) => svg.querySelectorAll(s);

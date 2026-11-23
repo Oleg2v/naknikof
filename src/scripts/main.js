@@ -34,7 +34,7 @@ function idle(fn, timeout = 1500) {
 reveals();
 
 // GSAP/Lenis are desktop-only enhancements: phones get native scroll + CSS reveals (no extra JS).
-const desktop = matchMedia('(min-width: 901px) and (hover: hover) and (pointer: fine)').matches;
+const desktop = document.documentElement.classList.contains('motion-ok');
 if (!reduce && desktop) {
   const start = () =>
     idle(async () => {
