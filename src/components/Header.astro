@@ -73,7 +73,7 @@ const nav = [
     </nav>
     <div class="mnav__foot">
       <a href={`tel:${STORE.phoneIntl.replace(/-/g, '')}`} dir="ltr">{STORE.phone}</a>
-      <a href={STORE.links.all}>{t.nav.shop} ↗</a>
+      <a class="mnav__ext" href={STORE.links.all}>{t.nav.shop} <svg class="ext" width="12" height="12" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 11L11 3M5 3h6v6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></a>
     </div>
   </div>
 </header>
@@ -338,6 +338,9 @@ const nav = [
     animation-delay: calc(var(--i) * 50ms);
   }
   .mnav__n { font: 500 0.8rem/1 var(--font-ui); color: var(--accent); }
+  :global(html.menu-open) :global(.wa-fab), :global(html.menu-open) :global(.review-launcher) { visibility: hidden; }
+  .mnav__ext { display: inline-flex; align-items: center; gap: 6px; }
+  :global([dir='rtl']) .mnav__ext :global(.ext) { transform: scaleX(-1); }
   .mnav__foot { display: flex; justify-content: space-between; gap: 16px; font-weight: 600; padding-block-start: 24px; border-block-start: 1px solid var(--line); }
   @keyframes mnavIn { from { opacity: 0; transform: translateY(24px); } }
 

@@ -31,8 +31,8 @@ const tel = `tel:${STORE.phoneIntl.replace(/-/g, '')}`;
         <dd>
           <p class="ct__big">{STORE.address.street[lang]}, {STORE.address.city[lang]}</p>
           <p class="ct__links">
-            <a href={STORE.maps} target="_blank" rel="noopener">{c.maps} ↗</a>
-            <a href={STORE.waze} target="_blank" rel="noopener">{c.waze} ↗</a>
+            <a href={STORE.maps} target="_blank" rel="noopener">{c.maps} <svg class="ext" width="12" height="12" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 11L11 3M5 3h6v6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></a>
+            <a href={STORE.waze} target="_blank" rel="noopener">{c.waze} <svg class="ext" width="12" height="12" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 11L11 3M5 3h6v6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></a>
           </p>
         </dd>
       </div>
@@ -50,7 +50,7 @@ const tel = `tel:${STORE.phoneIntl.replace(/-/g, '')}`;
       </div>
       <div class="ct__row">
         <dt>{c.telegram}</dt>
-        <dd><a class="ct__text ct__tg" href={STORE.telegram} target="_blank" rel="noopener" dir="ltr">t.me/kolbassnik ↗</a></dd>
+        <dd><a class="ct__text ct__tg" href={STORE.telegram} target="_blank" rel="noopener"><span dir="ltr">t.me/kolbassnik</span> <svg class="ext" width="12" height="12" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 11L11 3M5 3h6v6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></a></dd>
       </div>
     </dl>
   </div>
@@ -74,6 +74,8 @@ const tel = `tel:${STORE.phoneIntl.replace(/-/g, '')}`;
   .ct__big { font: 700 clamp(1.5rem, 1.1rem + 1.4vw, 2.4rem) / 1.1 var(--font-display); text-decoration: none; justify-self: start; }
   a.ct__big:hover { color: #f0b49b; }
   .ct__mail { font-size: clamp(1.2rem, 1rem + 1vw, 1.9rem); word-break: break-all; }
+  .ct__links a, .ct__tg { display: inline-flex; align-items: center; gap: 6px; }
+  :global([dir='rtl']) .ct :global(.ext) { transform: scaleX(-1); }
   .ct__links { display: flex; gap: 18px; font-weight: 600; font-size: 0.95rem; }
   .ct__links a { text-decoration-color: rgb(243 235 223 / 0.4); }
   .ct__text { color: var(--cream-on-dark); max-inline-size: 46ch; }

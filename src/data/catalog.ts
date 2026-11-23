@@ -202,10 +202,10 @@ export const POPULAR: Product[] = [
 
 /** Products referenced from the "meat → sausage" chapters (real prices). */
 export const STAGE_PICKS = {
-  casing: { ru: 'Devro 43 мм — 42 ₪', he: 'Devro‏ 43 מ״מ — 42 ₪', url: enc('devro-collagen-casing-43mm') },
-  stuffing: { ru: 'Колбасный шприц — от 770 ₪', he: 'ממלאת נקניקים — החל מ־770 ₪', url: enc('kolbasnyi-shpric') },
-  smoking: { ru: 'Щепа клён, 5 л — 50 ₪', he: 'שבבי מייפל, 5 ליטר — 50 ₪', url: enc('shchepa-dlya-kopcheniya-klen-hickory-5l') },
-  slicing: { ru: 'Разделочная доска 45 × 30 — 210 ₪', he: 'קרש חיתוך 45‎×30‏ — 210 ₪', url: enc('butcher') },
+  casing: { ru: 'Devro 43 мм — 42 ₪', he: 'Devro‏ 43 מ״מ — 42 ₪', url: enc('devro-collagen-casing-43mm') },
+  stuffing: { ru: 'Колбасный шприц — от 770 ₪', he: 'ממלאת נקניקים — החל מ־770 ₪', url: enc('kolbasnyi-shpric') },
+  smoking: { ru: 'Щепа клён, 5 л — 50 ₪', he: 'שבבי מייפל, 5 ליטר — 50 ₪', url: enc('shchepa-dlya-kopcheniya-klen-hickory-5l') },
+  slicing: { ru: 'Разделочная доска 45 × 30 — 210 ₪', he: 'קרש חיתוך 45‎×30‏ — 210 ₪', url: enc('butcher') },
 } as const;
 
 /** Where each story chapter leads (real collections). */

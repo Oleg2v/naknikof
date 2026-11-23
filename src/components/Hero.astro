@@ -52,7 +52,7 @@ const { t } = Astro.props;
         <div class="hero__stat">
           <dt class="sr-only">{s.label}</dt>
           <dd>
-            <span class="hero__statValue" dir="ltr">{s.value}</span>
+            <span class="hero__statValue">{s.value}</span>
             <span class="hero__statLabel" aria-hidden="true">{s.label}</span>
           </dd>
         </div>
@@ -198,8 +198,9 @@ const { t } = Astro.props;
 
   .hero__scroll {
     position: absolute;
-    inset-block-end: 18px;
-    inset-inline-end: var(--gutter);
+    /* physical offsets: logical insets would resolve against the vertical writing mode */
+    bottom: 18px;
+    right: var(--gutter);
     display: none;
     align-items: center;
     gap: 10px;
@@ -210,6 +211,7 @@ const { t } = Astro.props;
     color: var(--ink-2);
     writing-mode: vertical-rl;
   }
+  :global([dir='rtl']) .hero__scroll { right: auto; left: var(--gutter); }
   .hero__scroll svg { animation: nudge 2.4s var(--ease-io) infinite; }
   @keyframes nudge { 50% { transform: translateY(6px); } }
 

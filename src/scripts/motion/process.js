@@ -123,6 +123,11 @@ export function initProcess({ gsap, ScrollTrigger, lenis }) {
     }),
   );
 
-  mq.addEventListener('change', () => location.reload(), { once: true });
+  // Crossing the breakpoint switches between the scroll story and static plates. Never reload while the
+  // reviewer is commenting or the visitor is typing (would lose a draft).
+  mq.addEventListener('change', () => {
+    const busy = document.documentElement.classList.contains('kr-on') || document.activeElement?.matches('input, textarea');
+    if (!busy) location.reload();
+  });
   ScrollTrigger.refresh();
 }

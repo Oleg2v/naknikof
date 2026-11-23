@@ -61,7 +61,7 @@ const lang = t.lang as 'ru' | 'he';
                     <span class="ph__tag" aria-hidden="true">{t.catalog.photoNeeded}</span>
                   </div>
                 )}
-                {p.compareAt && <span class="pcard__badge">−{Math.round((1 - p.price / p.compareAt) * 100)}%</span>}
+                {p.compareAt && <span class="pcard__badge" dir="ltr">−{Math.round((1 - p.price / p.compareAt) * 100)}%</span>}
               </div>
               <div class="pcard__body">
                 <h4 class="pcard__title">{p.title[lang]}</h4>

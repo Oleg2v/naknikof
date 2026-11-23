@@ -23,7 +23,7 @@ const T = {
     done: 'Готово',
     list: 'Все комментарии',
     showResolved: 'Показывать решённые',
-    showOther: 'С версии на иврите',
+    showOther: 'Показывать с версии на иврите',
     nameTitle: 'Как вас зовут?',
     nameHint: 'Имя увидят все участники обсуждения. Регистрация не нужна.',
     namePh: 'Например, Артём',
@@ -59,7 +59,7 @@ const T = {
     done: 'סיום',
     list: 'כל ההערות',
     showResolved: 'הצגת הערות שטופלו',
-    showOther: 'מהגרסה הרוסית',
+    showOther: 'הצגת הערות מהגרסה הרוסית',
     nameTitle: 'איך קוראים לך?',
     nameHint: 'השם יוצג לכל המשתתפים בדיון. אין צורך בהרשמה.',
     namePh: 'לדוגמה: ארטיום',
@@ -80,10 +80,10 @@ const T = {
     resolved: 'טופלו',
     error: 'השמירה נכשלה. בדקו את החיבור ונסו שוב.',
     loadError: 'לא הצלחנו לטעון את ההערות.',
-    offPage: 'הרכיב לא נמצא — ההערה מוצגת לפי המיקום השמור',
+    offPage: 'הרכיב לא נמצא — ההערה מוצגת לפי המיקום השמור',
     otherLang: 'נכתבה בגרסה',
     you: 'אני',
-    shortcut: 'Ctrl/⌘ + Enter — שליחה',
+    shortcut: 'Ctrl/⌘ + Enter — שליחה',
     changeName: 'שינוי שם',
     goto: 'הצגה בעמוד',
   },
@@ -114,7 +114,7 @@ html.kr-on .kr-ui textarea, html.kr-on .kr-ui input { cursor: text !important; }
 .kr-hover { position: fixed; pointer-events: none; z-index: 2147482999; border: 1.5px solid #8c1c2c; border-radius: 4px;
   background: rgba(140,28,44,.06); transition: all .08s linear; display: none; }
 .kr-bar { position: fixed; z-index: 2147483001; inset-block-end: max(14px, env(safe-area-inset-bottom)); inset-inline: 12px; margin-inline: auto; max-width: 940px;
-  display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 8px 8px 8px 14px; border-radius: 14px;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding-block: 8px; padding-inline: 14px 8px; border-radius: 14px;
   background: #1b1414; color: #f6efe6; box-shadow: 0 12px 40px rgba(0,0,0,.35); }
 .kr-bar .kr-title { font-weight: 700; display: flex; align-items: center; gap: 8px; }
 .kr-bar .kr-dot { width: 8px; height: 8px; border-radius: 50%; background: #e2574c; box-shadow: 0 0 0 4px rgba(226,87,76,.25); }
@@ -127,9 +127,9 @@ html.kr-on .kr-ui textarea, html.kr-on .kr-ui input { cursor: text !important; }
 .kr-btn[disabled] { opacity: .5; cursor: not-allowed; }
 .kr-pop { position: fixed; z-index: 2147483002; width: min(340px, calc(100vw - 24px)); max-height: min(70vh, 560px); overflow: auto;
   background: #fffaf3; border-radius: 14px; box-shadow: 0 18px 60px rgba(30,10,10,.35); border: 1px solid #eadfd2; overscroll-behavior: contain; }
-.kr-pop header { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-block-end: 1px solid #eadfd2; position: sticky; top: 0; background: inherit; }
-.kr-pop header .kr-num { font-weight: 800; color: #8c1c2c; }
-.kr-pop header .kr-sp { flex: 1; }
+.kr-pop .kr-head { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-block-end: 1px solid #eadfd2; position: sticky; top: 0; background: inherit; }
+.kr-pop .kr-head .kr-num { font-weight: 800; color: #8c1c2c; }
+.kr-pop .kr-head .kr-sp { flex: 1; }
 .kr-icon { border: 0; background: transparent; width: 32px; height: 32px; border-radius: 8px; display: grid; place-items: center; color: #1b1414; }
 .kr-icon:hover { background: #f1e6d8; }
 .kr-msg { padding: 10px 12px; border-block-end: 1px solid #f1e6d8; }
@@ -143,7 +143,8 @@ html.kr-on .kr-ui textarea, html.kr-on .kr-ui input { cursor: text !important; }
   padding: 10px 12px; font: 400 15px/1.4 var(--font-ui, system-ui, sans-serif); background: #fff; color: #1b1414; }
 .kr-form textarea { min-height: 76px; }
 .kr-form .kr-row { display: flex; gap: 8px; justify-content: flex-end; align-items: center; }
-.kr-form .kr-kbd { margin-inline-end: auto; font-size: 11px; color: #8a7d73; }
+.kr-form .kr-kbd { margin-inline-end: auto; font-size: 11px; color: #5e524a; }
+.kr-sr { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .kr-err { color: #a3192b; font-size: 13px; }
 .kr-note { font-size: 12px; color: #6b5f57; padding: 8px 12px 0; }
 .kr-modal-back { position: fixed; inset: 0; z-index: 2147483003; background: rgba(20,10,10,.45); display: grid; place-items: center; padding: 16px; }
@@ -153,8 +154,8 @@ html.kr-on .kr-ui textarea, html.kr-on .kr-ui input { cursor: text !important; }
 .kr-side { position: fixed; z-index: 2147483002; inset-block: 0; inset-inline-end: 0; width: min(380px, 100vw); background: #fffaf3;
   box-shadow: -20px 0 60px rgba(0,0,0,.25); display: flex; flex-direction: column; }
 .kr-side[dir=rtl] { box-shadow: 20px 0 60px rgba(0,0,0,.25); }
-.kr-side header { display: flex; align-items: center; gap: 8px; padding: 14px 14px 10px; border-block-end: 1px solid #eadfd2; }
-.kr-side header h2 { margin: 0; font-size: 17px; flex: 1; }
+.kr-side .kr-head { display: flex; align-items: center; gap: 8px; padding: 14px 14px 10px; border-block-end: 1px solid #eadfd2; }
+.kr-side .kr-head h2 { margin: 0; font-size: 17px; flex: 1; }
 .kr-side .kr-filters { display: flex; gap: 6px; padding: 10px 14px; flex-wrap: wrap; }
 .kr-chip { border: 1px solid #d9cbbb; background: #fff; border-radius: 999px; padding: 4px 10px; font-size: 13px; }
 .kr-chip[aria-pressed=true] { background: #1b1414; color: #fff; border-color: #1b1414; }
@@ -245,13 +246,20 @@ function selectorFor(el) {
     while ((s = s.previousElementSibling)) if (s.localName === tag) i++;
     parts.unshift(`${tag}:nth-of-type(${i})`);
     n = n.parentElement;
-    if (parts.length > 7) break;
   }
-  return { selector: parts.join(' > ') || 'body', el };
+  let selector = parts.join(' > ') || 'body';
+  if (n === document.body && selector !== 'body') selector = `body > ${selector}`;
+  try {
+    if (document.querySelector(selector) !== el) selector = 'body';
+  } catch {
+    selector = 'body';
+  }
+  return { selector, el };
 }
 
+let clockOffset = 0; // server time − client time, from GET /api/comments
 const fmtTime = (ts, lang) => {
-  const diff = (ts - Date.now()) / 1000;
+  const diff = Math.min(0, (ts - (Date.now() + clockOffset)) / 1000);
   const rtf = new Intl.RelativeTimeFormat(lang, { numeric: 'auto' });
   const abs = Math.abs(diff);
   if (abs < 60) return rtf.format(Math.round(diff), 'second');
@@ -287,9 +295,12 @@ class Review {
     style.textContent = STYLES;
     document.head.append(style);
 
-    this.layer = h('div', { class: 'kr-ui kr-layer', 'data-kr-ui': '', 'aria-live': 'polite' });
+    this.layer = h('div', { class: 'kr-ui kr-layer', 'data-kr-ui': '' });
     this.hover = h('div', { class: 'kr-hover', 'aria-hidden': 'true' });
-    document.body.append(this.layer, this.hover);
+    this.status = h('div', { class: 'kr-ui kr-sr', 'data-kr-ui': '', role: 'status' });
+    this.pins = new Map();
+    this.root = h('aside', { class: 'kr-ui kr-root', 'data-kr-ui': '', 'aria-label': this.t.toolbar }, this.layer, this.hover, this.status);
+    document.body.append(this.root);
 
     this.onCapture = this.onCapture.bind(this);
     this.onMove = this.onMove.bind(this);
@@ -305,6 +316,7 @@ class Review {
       if (!r.ok) throw new Error(r.status);
       const d = await r.json();
       this.threads = d.threads || [];
+      if (d.now) clockOffset = d.now - Date.now();
     } catch (e) {
       this.toast(this.t.loadError);
     }
@@ -322,11 +334,18 @@ class Review {
   }
 
   /* ---------- mode ---------- */
-  async start() {
+  start() {
+    if (this.on) return Promise.resolve(true);
+    if (!this._starting) this._starting = this._start().finally(() => (this._starting = null));
+    return this._starting;
+  }
+
+  async _start() {
     if (!this.name) {
       const ok = await this.askName();
       if (!ok) return false;
     }
+    if (this.on) return true;
     this.on = true;
     document.documentElement.classList.add('kr-on');
     this.mountBar();
@@ -338,12 +357,16 @@ class Review {
     addEventListener('resize', this.schedule, { passive: true });
     this.ro = new ResizeObserver(this.schedule);
     this.ro.observe(document.body);
+    clearInterval(this.tick);
+    clearInterval(this.poll);
     this.tick = setInterval(this.schedule, 600); // follow scroll-driven animations
-    this.poll = setInterval(() => !this.pop && this.load(), 20000);
+    // refresh from the server, but never while the reviewer is typing or focused on a pin
+    this.poll = setInterval(() => !this.pop && !this.layer.contains(document.activeElement) && this.load(), 20000);
     window.dispatchEvent(new CustomEvent('review:mode', { detail: { on: true } }));
     await this.load();
     const m = location.hash.match(/^#comment-(\d+)$/);
     if (m) this.openByNumber(+m[1]);
+    else this.bar.querySelector('button')?.focus({ preventScroll: true });
     return true;
   }
 
@@ -364,7 +387,10 @@ class Review {
     this.side && this.side.remove();
     this.side = null;
     this.layer.replaceChildren();
+    this.pins.clear();
+    this.layer.style.height = '';
     this.hover.style.display = 'none';
+    document.querySelector('.review-launcher')?.focus({ preventScroll: true });
     const u = new URL(location.href);
     if (u.searchParams.has('comments')) {
       u.searchParams.delete('comments');
@@ -390,7 +416,7 @@ class Review {
       h('button', { class: 'kr-btn ghost', type: 'button', onclick: () => this.toggleSide() }, t.list),
       h('button', { class: 'kr-btn', type: 'button', onclick: () => this.stop() }, t.done),
     );
-    document.body.append(this.bar);
+    this.root.append(this.bar);
   }
 
   setPref(k, v) {
@@ -526,34 +552,52 @@ class Review {
 
   render() {
     if (!this.on) return;
-    this.layer.replaceChildren();
+    // Update pins in place (keyed by thread id) so focus and screen-reader context survive refreshes.
+    const keep = new Set();
     for (const th of this.threads) {
       if (!this.visible(th)) continue;
-      const pin = h(
-        'button',
-        {
+      keep.add(th.id);
+      let pin = this.pins.get(th.id);
+      if (!pin) {
+        pin = h('button', {
           type: 'button',
-          class: `kr-pin ${this.dir === 'rtl' ? 'rtl' : ''} ${th.resolved ? 'is-resolved' : ''} ${th.lang !== this.lang ? 'is-other' : ''} ${th.id === this.activeId ? 'is-active' : ''}`,
           'data-id': th.id,
-          'aria-label': `#${th.number} — ${th.author}: ${th.body.slice(0, 80)}`,
           onclick: (e) => {
             e.stopPropagation();
             this.openThread(th.id);
           },
-        },
-        String(th.number),
-      );
+        });
+        this.pins.set(th.id, pin);
+        this.layer.append(pin);
+      }
+      pin.className = `kr-pin ${this.dir === 'rtl' ? 'rtl' : ''} ${th.resolved ? 'is-resolved' : ''} ${th.lang !== this.lang ? 'is-other' : ''} ${th.id === this.activeId ? 'is-active' : ''}`;
+      pin.textContent = String(th.number);
+      pin.setAttribute('aria-label', `#${th.number} — ${th.author}: ${th.body.slice(0, 80)}`);
       th._pin = pin;
-      this.layer.append(pin);
     }
+    for (const [id, pin] of this.pins) {
+      if (!keep.has(id)) {
+        pin.remove();
+        this.pins.delete(id);
+      }
+    }
+    if (this.draftPin) this.draftPin.remove();
+    this.draftPin = null;
     if (this.draft) {
-      this.draft._pin = h('span', { class: `kr-pin is-draft ${this.dir === 'rtl' ? 'rtl' : ''}`, 'aria-hidden': 'true' }, '+');
-      this.layer.append(this.draft._pin);
+      this.draftPin = this.draft._pin = h('span', { class: `kr-pin is-draft ${this.dir === 'rtl' ? 'rtl' : ''}`, 'aria-hidden': 'true' }, '+');
+      this.layer.append(this.draftPin);
     }
     this.position();
   }
 
+  announce(text) {
+    this.status.textContent = '';
+    requestAnimationFrame(() => (this.status.textContent = text));
+  }
+
   position() {
+    // measure the document without the layer, so the layer never makes the page taller
+    this.layer.style.height = '0px';
     this.layer.style.height = `${document.documentElement.scrollHeight}px`;
     for (const th of [...this.threads, this.draft].filter(Boolean)) {
       if (!th._pin || !th._pin.isConnected) continue;
@@ -589,6 +633,9 @@ class Review {
 
   /* ---------- popovers ---------- */
   closePop() {
+    const hadPop = !!this.pop;
+    const opener = this.opener;
+    this.opener = null;
     if (this.pop) this.pop.remove();
     this.pop = null;
     this.popAnchor = null;
@@ -597,11 +644,13 @@ class Review {
     this.activeId = null;
     if (wasActive && location.hash.startsWith('#comment-')) history.replaceState(null, '', location.pathname + location.search);
     this.render();
+    if (hadPop && opener && opener.isConnected && this.on) opener.focus({ preventScroll: true });
   }
 
-  mountPop(node, anchor) {
+  mountPop(node, anchor, label) {
     if (this.pop) this.pop.remove();
-    this.pop = h('div', { class: 'kr-ui kr-pop', 'data-kr-ui': '', 'data-lenis-prevent': '', role: 'dialog', dir: this.dir }, node);
+    if (!this.opener) this.opener = document.activeElement && document.activeElement !== document.body ? document.activeElement : null;
+    this.pop = h('div', { class: 'kr-ui kr-pop', 'data-kr-ui': '', 'data-lenis-prevent': '', role: 'dialog', 'aria-label': label, dir: this.dir }, node);
     document.body.append(this.pop);
     this.popAnchor = anchor;
     this.placePop();
@@ -629,6 +678,7 @@ class Review {
             const d = await this.send('POST', '', { ...payload, body });
             this.threads.push(d.thread);
             this.draft = null;
+            this.announce(`#${d.thread.number} ✓`);
             this.openThread(d.thread.id);
           } catch {
             err.textContent = t.error;
@@ -650,13 +700,13 @@ class Review {
       if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) form.requestSubmit();
     });
     const head = h(
-      'header',
-      {},
+      'div',
+      { class: 'kr-head' },
       h('b', {}, this.name),
       h('span', { class: 'kr-sp' }),
       h('button', { class: 'kr-icon', type: 'button', 'aria-label': t.close, html: icon.close, onclick: () => this.closePop() }),
     );
-    this.mountPop(h('div', {}, head, form), draft._pin);
+    this.mountPop(h('div', {}, head, form), draft._pin, t.placeholder);
     ta.focus({ preventScroll: true });
   }
 
@@ -710,6 +760,7 @@ class Review {
           await this.send('PATCH', `/${th.id}`, { resolved: !th.resolved });
           th.resolved = !th.resolved;
           th.resolved_by = th.resolved ? this.name : null;
+          this.announce(`#${th.number}: ${th.resolved ? t.resolvedBy : t.reopen}`);
           this.openThread(th.id);
         } catch {
           this.toast(t.error);
@@ -739,8 +790,8 @@ class Review {
         : null;
 
     const head = h(
-      'header',
-      {},
+      'div',
+      { class: 'kr-head' },
       h('span', { class: 'kr-num' }, `#${th.number}`),
       langTag,
       resolvedTag,
@@ -791,7 +842,7 @@ class Review {
       th.replies.map((r) => msg(r.author, r.body, r.created_at)),
       form,
     );
-    this.mountPop(wrap, th._pin);
+    this.mountPop(wrap, th._pin, `#${th.number} — ${th.author}`);
     if (!this.touch) ta.focus({ preventScroll: true });
   }
 
@@ -887,9 +938,9 @@ class Review {
       : h('p', { class: 'kr-empty' }, t.empty);
     this.side.replaceChildren(
       h(
-        'header',
-        {},
-        h('h2', {}, t.list),
+        'div',
+        { class: 'kr-head' },
+        h('h2', { tabindex: '-1' }, t.list),
         h('button', { class: 'kr-icon', type: 'button', 'aria-label': t.close, html: icon.close, onclick: () => this.toggleSide(false) }),
       ),
       h(
@@ -917,10 +968,16 @@ class Review {
   /* ---------- name ---------- */
   askName(change = false) {
     const t = this.t;
-    return new Promise((resolve) => {
+    if (this._asking) return this._asking; // never stack two name dialogs
+    const opener = document.activeElement;
+    this._asking = new Promise((resolve) => {
       const input = h('input', { type: 'text', placeholder: t.namePh, 'aria-label': t.nameTitle, maxlength: '60', autocomplete: 'name', dir: 'auto', value: change ? this.name : null });
+      let others = [];
       const finish = (ok) => {
+        others.forEach((n) => (n.inert = false));
         back.remove();
+        this._asking = null;
+        if (!ok && opener && opener.isConnected) opener.focus({ preventScroll: true });
         resolve(ok);
       };
       const form = h(
@@ -956,9 +1013,13 @@ class Review {
           finish(false);
         }
       });
+      // True modal: everything else on the page is inert while the dialog is open.
+      others = [...document.body.children].filter((n) => !n.inert);
+      others.forEach((n) => (n.inert = true));
       document.body.append(back);
       input.focus();
     });
+    return this._asking;
   }
 
   toast(text) {
