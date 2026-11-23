@@ -98,7 +98,7 @@ npx wrangler secret put RESEND_API_KEY
 
 ## Производительность и доступность
 
-- Мобильный Lighthouse (продакшн): Performance 98–99, LCP ≈ 2,2 с, TBT ≈ 0 мс, CLS 0, Accessibility 100, Best Practices 100. SEO 69 — только из-за `noindex`: демо на kikkey.com специально закрыто от индексации, чтобы не конкурировать с kolbassnik.com. Для продакшна: `PUBLIC_INDEXABLE=true npm run build`.
+- Lighthouse (продакшн, 23.11.2026, отчёты в `docs/reports/`): мобильный — Performance 99, LCP 2,0 с, TBT 20–110 мс, CLS 0; десктоп — Performance 100, LCP 0,6 с. Accessibility 100 и Best Practices 100 на обоих языках; axe — 0 нарушений. SEO 69 — только из-за `noindex`: демо на kikkey.com специально закрыто от индексации, чтобы не конкурировать с kolbassnik.com. Для продакшна: `PUBLIC_INDEXABLE=true npm run build`.
 - LCP — текст H1 (без ожидания JS). Шрифты: preload двух файлов на язык, `font-display: swap`, метрически подогнанные фолбэки.
 - GSAP/Lenis грузятся только на десктопе после `load` в `requestIdleCallback`; на телефоне — нативный скролл и CSS-появление.
 - `prefers-reduced-motion`: без Lenis и анимаций, история «От мяса до колбасы» показывается четырьмя статичными иллюстрациями.

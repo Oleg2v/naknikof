@@ -131,7 +131,7 @@
 
 ## 10. Производительность
 
-Бюджет: LCP < 2.5 с, CLS < 0.1, INP < 200 мс, Lighthouse mobile ≥ 90. Результат (продакшн, мобильный профиль): **Performance 98–99, LCP ≈ 2.2 с, TBT ≈ 0 мс, CLS 0**, Accessibility 100, Best Practices 100.
+Бюджет: LCP < 2.5 с, CLS < 0.1, INP < 200 мс, Lighthouse mobile ≥ 90. Результат (продакшн, мобильный профиль): **Performance 99, LCP 2.0 с, TBT 20–110 мс, CLS 0**; десктоп — 100, LCP 0.6 с. Accessibility 100, Best Practices 100.
 
 - HTML со встроенным критическим CSS, без блокирующих скриптов; H1 — текст, видим с первого кадра.
 - JS на телефоне: ≈ 4 КБ gzip (появление, меню, калькулятор). GSAP + ScrollTrigger + Lenis (≈ 51 КБ gzip) — только десктоп, после `load`, в `requestIdleCallback`.
