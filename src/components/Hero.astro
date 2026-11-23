@@ -147,6 +147,7 @@ const { t } = Astro.props;
 
   .hero__foot {
     grid-column: 1 / span 7;
+    min-inline-size: 0;
     position: relative;
     z-index: 2;
     display: grid;
@@ -161,7 +162,7 @@ const { t } = Astro.props;
     color: var(--ink-2);
   }
   .hero__ctas { display: flex; flex-wrap: wrap; gap: 12px; }
-  .hero__chips { display: none; }
+  .hero__chips { display: none; min-inline-size: 0; }
   .hero__chips ul { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter); padding-block: 2px; }
   .hero__chips ul::-webkit-scrollbar { display: none; }
   .hero__chips a { display: inline-flex; align-items: center; min-block-size: 40px; padding-inline: 14px; border-radius: 999px; background: var(--paper-2); font-size: 0.9rem; font-weight: 500; text-decoration: none; white-space: nowrap; }
