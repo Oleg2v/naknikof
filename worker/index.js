@@ -4,7 +4,8 @@
  * - Serves the static Astro build (Workers Static Assets, same CDN as Cloudflare Pages).
  * - "/" → 302 to /ru/ or /he/ by Accept-Language.
  * - /api/comments* → Figma-style review comments stored in a SQLite-backed Durable Object.
- * - New comments / replies trigger a notification (webhook and/or ntfy push + e-mail forward).
+ * - New comments / replies / status changes trigger notifications: e-mail (Resend), Telegram, ntfy or any webhook —
+ *   whichever secrets are configured (see README).
  *
  * No secrets live in the repo. Configure them with `wrangler secret put …` (see README).
  */
@@ -106,17 +107,40 @@ async function notify(env, evt, origin) {
     );
   }
 
-  if (env.NTFY_TOPIC) {
-    const headers = {
-      Title: encodeRFC2047(head),
-      Click: link,
-      Tags: 'speech_balloon',
-    };
-    if (env.NTFY_EMAIL) headers.Email = env.NTFY_EMAIL;
+  if (env.RESEND_API_KEY && env.NOTIFY_EMAIL) {
+    // E-mail via Resend (free plan). Without a verified domain Resend delivers from onboarding@resend.dev
+    // to the address the Resend account was registered with — register it with NOTIFY_EMAIL.
+    jobs.push(
+      fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', authorization: `Bearer ${env.RESEND_API_KEY}` },
+        body: JSON.stringify({
+          from: env.NOTIFY_FROM || 'Kolbassnik review <onboarding@resend.dev>',
+          to: [env.NOTIFY_EMAIL],
+          subject: `Kolbassnik: ${head}`,
+          text,
+          html: `<p style="font:16px/1.5 sans-serif"><b>${esc(head)}</b></p><blockquote style="font:16px/1.5 sans-serif;border-left:3px solid #6e1634;margin:0;padding:4px 12px">${esc(evt.body || '')}</blockquote><p><a href="${link}">Открыть на странице →</a></p>`,
+        }),
+      }),
+    );
+  }
+
+  if (env.TELEGRAM_BOT_TOKEN && env.TELEGRAM_CHAT_ID) {
+    jobs.push(
+      fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ chat_id: env.TELEGRAM_CHAT_ID, text, disable_web_page_preview: true }),
+      }),
+    );
+  }
+
+  if (env.NTFY_TOPIC && env.NTFY_TOKEN) {
+    // ntfy needs an access token from Workers: anonymous quotas are per IP and Workers share egress IPs.
     jobs.push(
       fetch(`${env.NTFY_SERVER || 'https://ntfy.sh'}/${env.NTFY_TOPIC}`, {
         method: 'POST',
-        headers,
+        headers: { Title: encodeRFC2047(head), Click: link, Tags: 'speech_balloon', authorization: `Bearer ${env.NTFY_TOKEN}` },
         body: `«${evt.body || ''}»\n${link}`,
       }),
     );
@@ -128,6 +152,8 @@ async function notify(env, evt, origin) {
     else if (!r.value.ok) console.error('notify http', r.value.status, await r.value.text().catch(() => ''));
   }
 }
+
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
 // HTTP headers must be ASCII; ntfy accepts RFC 2047 encoded-words for UTF-8 titles.
 function encodeRFC2047(s) {

@@ -18,7 +18,7 @@
 | Анимации | GSAP 3 + ScrollTrigger, Lenis (только десктоп, грузятся после загрузки страницы) |
 | Шрифты | Bona Nova + Rubik (OFL), self-host, по одному файлу на начертание и язык |
 | Хостинг | Cloudflare Workers + Static Assets (тот же CDN, что у Pages), домен `kolbassnik.kikkey.com` |
-| Комментарии | Cloudflare Worker + Durable Object (SQLite), уведомления через ntfy (push + письмо) |
+| Комментарии | Cloudflare Worker + Durable Object (SQLite), уведомления: письмо (Resend), Telegram или webhook |
 
 Почему Workers, а не Pages: Cloudflare сейчас рекомендует Workers Static Assets для новых проектов — это тот же глобальный CDN, но статика и API комментариев живут в одном деплое на одном домене (без CORS). Все поддомены `*.kikkey.com` в аккаунте уже устроены так же. Для хранения выбран SQLite в Durable Object, а не D1: у API-токена нет прав на D1, а Durable Object — это тот же SQLite, создаётся вместе с воркером одной командой `wrangler deploy` и не требует отдельной базы.
 
@@ -73,19 +73,22 @@ npm run deploy     # astro build && wrangler deploy
 
 ### Уведомления о новых комментариях
 
-Воркер отправляет уведомление о каждом новом комментарии, ответе и смене статуса. Каналы включаются секретами воркера (в репозитории секретов нет):
+Воркер отправляет уведомление о каждом новом комментарии, ответе и смене статуса («решено» / «открыт снова») — во все каналы, для которых заданы секреты. Секреты хранятся в Cloudflare, в репозитории их нет. Нужен **один** любой канал:
 
-| Секрет | Что делает |
-| --- | --- |
-| `NTFY_TOPIC` | push в приложение [ntfy](https://ntfy.sh) (iOS/Android/веб): подпишитесь на этот топик |
-| `NTFY_EMAIL` | ntfy пересылает то же уведомление письмом на этот адрес (сейчас — oleg@kikkey.online) |
-| `NOTIFY_WEBHOOK_URL` | (необязательно) POST JSON на любой webhook: Slack (`text`), Discord (`content`), Make/Zapier/n8n |
+| Канал | Секреты | Настройка (2 минуты) |
+| --- | --- | --- |
+| **Письмо** на oleg@kikkey.online | `RESEND_API_KEY`, `NOTIFY_EMAIL` (уже задан: oleg@kikkey.online) | Зарегистрироваться на [resend.com](https://resend.com) **с адресом oleg@kikkey.online** (бесплатно, 100 писем/день) → API Keys → Create → вставить ключ в секрет `RESEND_API_KEY`. Без своего домена Resend шлёт с onboarding@resend.dev на адрес аккаунта — этого достаточно |
+| **Telegram** | `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` | @BotFather → /newbot → токен; написать боту любое сообщение; открыть `https://api.telegram.org/bot<ТОКЕН>/getUpdates` и взять `chat.id` |
+| **Webhook** | `NOTIFY_WEBHOOK_URL` | POST JSON: подходит Slack (`text`), Discord (`content`), Make / Zapier / n8n (полный объект события) |
+| **ntfy push** | `NTFY_TOPIC`, `NTFY_TOKEN` | аккаунт на ntfy.sh → Access token |
+
+Как задать секрет: Cloudflare Dashboard → Workers & Pages → `kolbassnik` → Settings → Variables and Secrets → Add (тип Secret), или из терминала:
 
 ```bash
-npx wrangler secret put NTFY_TOPIC
-npx wrangler secret put NTFY_EMAIL
-npx wrangler secret put NOTIFY_WEBHOOK_URL
+npx wrangler secret put RESEND_API_KEY
 ```
+
+Почему не анонимные сервисы: бесплатные ретрансляторы без ключа (ntfy.sh без токена, FormSubmit) ограничивают число сообщений по IP, а у Cloudflare Workers общие исходящие IP — при проверке оба вернули 429. Поэтому только каналы с ключом.
 
 ## Калькулятор нитритной соли
 
