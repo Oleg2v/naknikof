@@ -1,0 +1,349 @@
+---
+import { Picture } from 'astro:assets';
+import logo from '../assets/brand/logo.png';
+import { STORE } from '../data/store';
+import type { Copy } from '../i18n/ru';
+
+interface Props {
+  t: Copy;
+}
+const { t } = Astro.props;
+const lang = t.lang as 'ru' | 'he';
+const other = lang === 'ru' ? 'he' : 'ru';
+const nav = [
+  ['#catalog', t.nav.catalog],
+  ['#process', t.nav.process],
+  ['#seminars', t.nav.seminars],
+  ['#calculator', t.nav.calculator],
+  ['#blog', t.nav.blog],
+  ['#contacts', t.nav.contacts],
+] as const;
+---
+<div class="topbar" data-cid="topbar">
+  <div class="topbar__track" aria-live="off">
+    {t.topbar.map((line, i) => <p class="topbar__item" data-i={i}>{line}</p>)}
+  </div>
+</div>
+
+<header class="hdr" data-cid="header">
+  <div class="hdr__inner wrap">
+    <a class="hdr__logo" href={`/${lang}/`} aria-label={t.a11y.logo} data-cid="logo">
+      <span class="hdr__badge">
+        <Picture src={logo} formats={['avif', 'webp']} widths={[64, 128]} sizes="64px" alt="" loading="eager" fetchpriority="low" />
+        <svg class="hdr__ring" viewBox="0 0 120 120" aria-hidden="true">
+          <defs><path id={`ring-${lang}`} d="M60 60m-49 0a49 49 0 1 1 98 0a49 49 0 1 1-98 0" /></defs>
+          <text><textPath href={`#ring-${lang}`}>KOLBASSNIK · КОЛБАСНИК · קולבסניק · </textPath></text>
+        </svg>
+      </span>
+      <span class="hdr__word">Kolbassnik</span>
+    </a>
+
+    <nav class="hdr__nav" aria-label={t.a11y.mainNav}>
+      <ul role="list">
+        {nav.map(([href, label]) => <li><a href={href}>{label}</a></li>)}
+      </ul>
+    </nav>
+
+    <div class="hdr__actions">
+      <a class="hdr__lang" href={`/${other}/`} hreflang={other} lang={other} aria-label={`${t.a11y.langSwitch}: ${other === 'he' ? 'עברית' : 'Русский'}`}>
+        <span aria-hidden="true" class={lang === 'ru' ? 'is-cur' : ''}>RU</span>
+        <span aria-hidden="true" class="hdr__sep">/</span>
+        <span aria-hidden="true" class={lang === 'he' ? 'is-cur' : ''}>עב</span>
+      </a>
+      <a class="hdr__icon" href={STORE.links.cart} aria-label={t.a11y.cart}>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7h14l-1.2 11.2a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8z"/><path d="M9 10V6a3 3 0 0 1 6 0v4"/></svg>
+      </a>
+      <a class="hdr__cta" href={STORE.links.all}>{t.nav.shop}</a>
+      <button class="hdr__burger" type="button" aria-expanded="false" aria-controls="mnav" data-open={t.a11y.menu} data-close={t.a11y.closeMenu}>
+        <span class="sr-only">{t.a11y.menu}</span>
+        <span class="hdr__bars" aria-hidden="true"><i></i><i></i></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="mnav" id="mnav" hidden>
+    <nav aria-label={t.a11y.mainNav}>
+      <ol role="list">
+        {nav.map(([href, label], i) => (
+          <li style={`--i:${i}`}>
+            <a href={href}><span class="mnav__n">{String(i + 1).padStart(2, '0')}</span>{label}</a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+    <div class="mnav__foot">
+      <a href={`tel:${STORE.phone.replace(/-/g, '')}`}>{STORE.phone}</a>
+      <a href={STORE.links.all}>{t.nav.shop} ↗</a>
+    </div>
+  </div>
+</header>
+
+<script>
+  const btn = document.querySelector<HTMLButtonElement>('.hdr__burger');
+  const panel = document.getElementById('mnav');
+  const hdr = document.querySelector<HTMLElement>('.hdr');
+  if (btn && panel && hdr) {
+    const set = (open: boolean) => {
+      btn.setAttribute('aria-expanded', String(open));
+      btn.querySelector('.sr-only')!.textContent = open ? btn.dataset.close! : btn.dataset.open!;
+      panel.hidden = !open;
+      document.documentElement.classList.toggle('menu-open', open);
+      const lenis = (window as any).lenis;
+      if (lenis) open ? lenis.stop() : lenis.start();
+      if (open) panel.querySelector('a')?.focus();
+    };
+    btn.addEventListener('click', () => set(btn.getAttribute('aria-expanded') !== 'true'));
+    panel.addEventListener('click', (e) => {
+      if ((e.target as HTMLElement).closest('a')) set(false);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && btn.getAttribute('aria-expanded') === 'true') {
+        set(false);
+        btn.focus();
+      }
+    });
+  }
+  // Compact header after the hero; hide on scroll down, show on scroll up.
+  if (hdr) {
+    let last = 0;
+    let ticking = false;
+    const onScroll = () => {
+      const y = window.scrollY;
+      hdr.classList.toggle('is-scrolled', y > 40);
+      hdr.classList.toggle('is-hidden', y > 400 && y > last && !document.documentElement.classList.contains('menu-open'));
+      last = y;
+      ticking = false;
+    };
+    addEventListener('scroll', () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(onScroll);
+      }
+    }, { passive: true });
+    hdr.addEventListener('focusin', () => hdr.classList.remove('is-hidden'));
+  }
+  // Rotating topbar messages (static list when reduced motion).
+  const items = document.querySelectorAll<HTMLElement>('.topbar__item');
+  if (items.length > 1 && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    let i = 0;
+    items[0].classList.add('is-on');
+    setInterval(() => {
+      items[i].classList.remove('is-on');
+      i = (i + 1) % items.length;
+      items[i].classList.add('is-on');
+    }, 4000);
+  } else items.forEach((el) => el.classList.add('is-on', 'is-static'));
+</script>
+
+<style>
+  .topbar {
+    position: relative;
+    z-index: 51;
+    background: var(--accent);
+    color: var(--paper);
+    font-size: var(--fs-small);
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    block-size: 36px;
+    overflow: hidden;
+  }
+  .topbar__track { position: relative; block-size: 100%; }
+  .topbar__item {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding-inline: var(--gutter);
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    opacity: 0;
+    transform: translateY(60%);
+    transition: opacity 0.5s var(--ease), transform 0.6s var(--ease);
+  }
+  .topbar__item.is-on { opacity: 1; transform: none; }
+  :global(.no-js) .topbar__item:first-child { opacity: 1; transform: none; }
+  .topbar__item.is-static:not(:first-child) { display: none; }
+
+  .hdr {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 50;
+    transition: transform 0.45s var(--ease), background-color 0.3s, box-shadow 0.3s;
+  }
+  .hdr.is-scrolled {
+    background: color-mix(in srgb, var(--paper) 86%, transparent);
+    -webkit-backdrop-filter: saturate(1.4) blur(14px);
+    backdrop-filter: saturate(1.4) blur(14px);
+    box-shadow: 0 1px 0 var(--line);
+  }
+  .hdr.is-hidden { transform: translateY(-110%); }
+  /* backdrop-filter/transform would trap the fixed menu panel inside the header box */
+  :global(.menu-open) .hdr { -webkit-backdrop-filter: none; backdrop-filter: none; transform: none; background: var(--paper); }
+  .hdr__inner {
+    display: flex;
+    align-items: center;
+    gap: clamp(12px, 2vw, 32px);
+    block-size: 76px;
+  }
+  .hdr__logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    flex: none;
+  }
+  .hdr__badge {
+    position: relative;
+    inline-size: 56px;
+    block-size: 56px;
+    display: grid;
+    place-items: center;
+  }
+  .hdr__badge :global(img) {
+    inline-size: 44px;
+    block-size: 44px;
+    border-radius: 50%;
+  }
+  .hdr__ring {
+    position: absolute;
+    inset: 0;
+    inline-size: 100%;
+    block-size: 100%;
+    font: 600 9.6px/1 var(--font-ui);
+    letter-spacing: 0.18em;
+    fill: var(--accent);
+    animation: spin 26s linear infinite;
+    animation-play-state: paused;
+  }
+  .hdr__logo:hover .hdr__ring { animation-play-state: running; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .hdr__word {
+    font: 700 1.5rem/1 var(--font-display);
+    letter-spacing: -0.01em;
+    color: var(--accent);
+  }
+  .hdr__nav { margin-inline: auto; }
+  .hdr__nav ul { display: flex; gap: clamp(14px, 1.6vw, 28px); }
+  .hdr__nav a {
+    position: relative;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    padding-block: 6px;
+  }
+  .hdr__nav a::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: 0;
+    block-size: 1.5px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: var(--origin-end, right);
+    transition: transform 0.45s var(--ease);
+  }
+  :global([dir='rtl']) .hdr__nav a::after { --origin-end: left; --origin-start: right; }
+  .hdr__nav a:hover::after,
+  .hdr__nav a:focus-visible::after { transform: scaleX(1); transform-origin: var(--origin-start, left); }
+  .hdr__actions { display: flex; align-items: center; gap: 8px; margin-inline-start: auto; }
+  .hdr__nav + .hdr__actions { margin-inline-start: 0; }
+  .hdr__lang {
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+    min-block-size: 44px;
+    padding-inline: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--ink-2);
+  }
+  .hdr__lang .is-cur { color: var(--accent); }
+  .hdr__sep { opacity: 0.4; }
+  .hdr__icon {
+    display: grid;
+    place-items: center;
+    inline-size: 44px;
+    block-size: 44px;
+    border-radius: 50%;
+    color: var(--ink);
+    transition: background 0.2s;
+  }
+  .hdr__icon:hover { background: var(--paper-2); }
+  .hdr__cta {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: 44px;
+    padding-inline: 20px;
+    border-radius: 999px;
+    background: var(--ink);
+    color: var(--paper);
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: background 0.25s;
+  }
+  .hdr__cta:hover { background: var(--accent); }
+  .hdr__burger {
+    display: none;
+    inline-size: 44px;
+    block-size: 44px;
+    border: 0;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--paper);
+    place-items: center;
+  }
+  .hdr__bars { display: grid; gap: 5px; inline-size: 18px; }
+  .hdr__bars i { display: block; block-size: 1.8px; background: currentColor; border-radius: 2px; transition: transform 0.35s var(--ease); }
+  .hdr__burger[aria-expanded='true'] .hdr__bars i:first-child { transform: translateY(3.4px) rotate(45deg); }
+  .hdr__burger[aria-expanded='true'] .hdr__bars i:last-child { transform: translateY(-3.4px) rotate(-45deg); }
+
+  .mnav {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    padding: 120px var(--gutter) 40px;
+    background: var(--paper);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: auto;
+  }
+  .mnav[hidden] { display: none; }
+  .mnav ol { display: grid; gap: 4px; }
+  .mnav a { text-decoration: none; }
+  .mnav li a {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    font: 700 clamp(2rem, 9vw, 3.4rem) / 1.08 var(--font-display);
+    letter-spacing: var(--track-display);
+    color: var(--ink);
+    padding-block: 4px;
+    animation: mnavIn 0.6s var(--ease) both;
+    animation-delay: calc(var(--i) * 50ms);
+  }
+  .mnav__n { font: 500 0.8rem/1 var(--font-ui); color: var(--accent); }
+  .mnav__foot { display: flex; justify-content: space-between; gap: 16px; font-weight: 600; padding-block-start: 24px; border-block-start: 1px solid var(--line); }
+  @keyframes mnavIn { from { opacity: 0; transform: translateY(24px); } }
+
+  @media (max-width: 1100px) {
+    .hdr__nav, .hdr__cta { display: none; }
+    .hdr__burger { display: grid; }
+  }
+  @media (max-width: 520px) {
+    .hdr__inner { block-size: 64px; }
+    .hdr__word { font-size: 1.25rem; }
+    .hdr__badge { inline-size: 48px; block-size: 48px; }
+    .hdr__badge :global(img) { inline-size: 38px; block-size: 38px; }
+    .hdr__icon { display: none; }
+    .topbar { font-size: 0.8rem; block-size: 32px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hdr__ring { animation: none; }
+    .hdr, .topbar__item { transition: none; }
+  }
+</style>

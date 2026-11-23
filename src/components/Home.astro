@@ -1,0 +1,23 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from './Header.astro';
+import Hero from './Hero.astro';
+import WhatsAppFab from './WhatsAppFab.astro';
+import ReviewLauncher from './ReviewLauncher.astro';
+import '../styles/ui.css';
+import type { Copy } from '../i18n/ru';
+
+interface Props {
+  t: Copy;
+}
+const { t } = Astro.props;
+const lang = t.lang as 'ru' | 'he';
+---
+<Base t={t}>
+  <Header t={t} />
+  <main id="main">
+    <Hero t={t} />
+  </main>
+  <WhatsAppFab label={t.a11y.whatsapp} text={lang === 'he' ? 'שלום! יש לי שאלה' : 'Здравствуйте! У меня вопрос'} />
+  <ReviewLauncher lang={lang} />
+</Base>

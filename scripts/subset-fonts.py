@@ -52,6 +52,9 @@ def cut(src, dst, script):
 JOBS = [
     # (output name, fontsource package dir, file stem pattern, scripts)
     ('rubik', '@fontsource-variable/rubik/files', 'rubik-{s}-wght-normal.woff2', ['latin', 'cyrillic', 'hebrew']),
+    ('bonanova-700', '@fontsource/bona-nova/files', 'bona-nova-{s}-700-normal.woff2', ['latin', 'cyrillic', 'hebrew']),
+    ('bonanova-400i', '@fontsource/bona-nova/files', 'bona-nova-{s}-400-italic.woff2', ['latin', 'cyrillic', 'hebrew']),
+    ('bonanova-400', '@fontsource/bona-nova/files', 'bona-nova-{s}-400-normal.woff2', ['latin', 'cyrillic', 'hebrew']),
 ]
 
 if len(sys.argv) > 1 and sys.argv[1] == '--list':

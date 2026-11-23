@@ -1,0 +1,109 @@
+/* Self-hosted, subset fonts (see scripts/subset-fonts.py). OFL licensed:
+   Rubik (Hubert & Fischer, Meir Sadan) · Bona Nova (Capitalics, Mateusz Machalski; Hebrew by Ania Wieluńska). */
+
+@font-face {
+  font-family: 'Rubik';
+  src: url('/fonts/rubik-latin.woff2') format('woff2');
+  font-weight: 300 900;
+  font-display: swap;
+  unicode-range: U+0020-007E, U+00A0-00BB, U+00D7, U+00F7, U+2010-2014, U+2018-201E, U+2022, U+2026, U+2116, U+2190-2193, U+2212, U+00B0, U+2032-2033, U+00BD;
+}
+@font-face {
+  font-family: 'Rubik';
+  src: url('/fonts/rubik-cyrillic.woff2') format('woff2');
+  font-weight: 300 900;
+  font-display: swap;
+  unicode-range: U+0400-045F, U+0490-0491;
+}
+@font-face {
+  font-family: 'Rubik';
+  src: url('/fonts/rubik-hebrew.woff2') format('woff2');
+  font-weight: 300 900;
+  font-display: swap;
+  unicode-range: U+0590-05FF, U+FB1D-FB4F, U+200E-200F, U+20AA;
+}
+
+@font-face {
+  font-family: 'Bona Nova';
+  src: url('/fonts/bonanova-700-latin.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+  unicode-range: U+0020-007E, U+00A0-00BB, U+00D7, U+2010-2014, U+2018-201E, U+2026, U+2116, U+2212, U+00B0;
+}
+@font-face {
+  font-family: 'Bona Nova';
+  src: url('/fonts/bonanova-700-cyrillic.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+  unicode-range: U+0400-045F, U+0490-0491;
+}
+@font-face {
+  font-family: 'Bona Nova';
+  src: url('/fonts/bonanova-700-hebrew.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+  unicode-range: U+0590-05FF, U+FB1D-FB4F, U+20AA;
+}
+
+@font-face {
+  font-family: 'Bona Nova';
+  src: url('/fonts/bonanova-400-latin.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+  unicode-range: U+0020-007E, U+00A0-00BB, U+00D7, U+2010-2014, U+2018-201E, U+2026, U+2116, U+2212, U+00B0;
+}
+@font-face {
+  font-family: 'Bona Nova';
+  src: url('/fonts/bonanova-400-cyrillic.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+  unicode-range: U+0400-045F, U+0490-0491;
+}
+@font-face {
+  font-family: 'Bona Nova';
+  src: url('/fonts/bonanova-400-hebrew.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+  unicode-range: U+0590-05FF, U+FB1D-FB4F, U+20AA;
+}
+
+@font-face {
+  font-family: 'Bona Nova';
+  src: url('/fonts/bonanova-400i-latin.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+  unicode-range: U+0020-007E, U+00A0-00BB, U+00D7, U+2010-2014, U+2018-201E, U+2026, U+2116, U+2212, U+00B0;
+}
+@font-face {
+  font-family: 'Bona Nova';
+  src: url('/fonts/bonanova-400i-cyrillic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+  unicode-range: U+0400-045F, U+0490-0491;
+}
+@font-face {
+  font-family: 'Bona Nova';
+  src: url('/fonts/bonanova-400i-hebrew.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+  unicode-range: U+0590-05FF, U+FB1D-FB4F, U+20AA;
+}
+
+/* Metric-matched fallbacks to minimise layout shift while fonts swap in. */
+@font-face {
+  font-family: 'Rubik Fallback';
+  src: local('Arial'), local('Helvetica'), local('Liberation Sans');
+  size-adjust: 104%;
+  ascent-override: 90%;
+  descent-override: 24%;
+}
+@font-face {
+  font-family: 'Bona Nova Fallback';
+  src: local('Georgia'), local('Times New Roman'), local('Liberation Serif');
+  size-adjust: 98%;
+  ascent-override: 95%;
+  descent-override: 28%;
+}

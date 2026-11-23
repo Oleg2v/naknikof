@@ -3,8 +3,8 @@
  * Every Hebrew string in he.ts mirrors a key here; docs/copy-ru-he.md shows them side by side.
  */
 export const ru = {
-  lang: 'ru',
-  dir: 'ltr',
+  lang: 'ru' as 'ru' | 'he',
+  dir: 'ltr' as 'ltr' | 'rtl',
   meta: {
     title: 'Товары для домашней колбасы в Израиле — Kolbassnik',
     description:
@@ -189,6 +189,6 @@ export const ru = {
     top: 'Наверх',
   },
   whatsappFab: 'WhatsApp',
-} as const;
+};
 
 export type Copy = typeof ru;

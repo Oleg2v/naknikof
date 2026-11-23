@@ -11,7 +11,7 @@ interface Props {
   label?: string; // aria-label; omit → decorative
   tone?: 'raw' | 'cured';
 }
-const { seed = 7, specks = 46, pepper = 14, class: cls = '', label, tone = 'cured' } = Astro.props;
+const { seed = 7, specks = 90, pepper = 16, class: cls = '', label, tone = 'cured' } = Astro.props;
 
 // mulberry32 PRNG
 function rng(a: number) {
@@ -32,12 +32,12 @@ const fat: Blob[] = [];
 const placed: { x: number; y: number; s: number }[] = [];
 let guard = 0;
 while (fat.length < specks && guard++ < specks * 40) {
-  const s = 3 + r() * 7.5; // size
+  const s = 2.2 + r() * r() * 7.5; // size: many small, few large
   const ang = r() * Math.PI * 2;
   const dist = Math.sqrt(r()) * (R - 14 - s);
   const x = Math.cos(ang) * dist;
   const y = Math.sin(ang) * dist;
-  if (placed.some((p) => Math.hypot(p.x - x, p.y - y) < p.s + s + 2.2)) continue;
+  if (placed.some((p) => Math.hypot(p.x - x, p.y - y) < p.s + s + 1.6)) continue;
   placed.push({ x, y, s });
   // irregular polygon (5–7 points)
   const n = 5 + Math.floor(r() * 3);
@@ -59,11 +59,19 @@ while (fat.length < specks && guard++ < specks * 40) {
   }
   fat.push({ d: d + 'Z' });
 }
-const peppers = Array.from({ length: pepper }, () => {
+const peppers: { x: number; y: number; s: number }[] = [];
+let pg = 0;
+while (peppers.length < pepper && pg++ < pepper * 60) {
   const ang = r() * Math.PI * 2;
   const dist = Math.sqrt(r()) * (R - 16);
-  return { x: Math.cos(ang) * dist, y: Math.sin(ang) * dist, s: 1.6 + r() * 1.6 };
-});
+  const x = Math.cos(ang) * dist;
+  const y = Math.sin(ang) * dist;
+  const s = 1.4 + r() * 1.4;
+  // keep pepper in the meat, never inside a fat speck (reads as "eyes" otherwise)
+  if (placed.some((p) => Math.hypot(p.x - x, p.y - y) < p.s + s + 1.5)) continue;
+  if (peppers.some((p) => Math.hypot(p.x - x, p.y - y) < 8)) continue;
+  peppers.push({ x, y, s });
+}
 const id = `ss${seed}`;
 const meatA = tone === 'raw' ? '#d9737a' : '#b0283f';
 const meatB = tone === 'raw' ? '#b84a56' : '#6e1634';
@@ -85,7 +93,7 @@ const meatB = tone === 'raw' ? '#b84a56' : '#6e1634';
   <circle r="106" class="salami__casing" fill="#3a0f1b" />
   <circle r="101" class="salami__rim" fill="none" stroke="#e9d9c4" stroke-opacity=".35" stroke-width="1.2" />
   <circle r="99" class="salami__meat" fill={`url(#${id}m)`} />
-  <g class="salami__fat" fill="#f4e6d3">
+  <g class="salami__fat" fill="#f2e2cf">
     {fat.map((b) => <path d={b.d} />)}
   </g>
   <g class="salami__pepper" fill="#1c0c0c">
