@@ -5,15 +5,15 @@
   --paper-2: #e9dccb;
   --paper-3: #fbf7f1;
   --ink: #1c1214;
-  --ink-2: #57463f;      /* muted text: 7.0:1 on --paper */
-  --accent: #6e1634;     /* Kolbassnik bordeaux: 10.9:1 on --paper */
+  --ink-2: #57463f;      /* muted text: 7.6:1 on --paper */
+  --accent: #6e1634;     /* Kolbassnik bordeaux: 9.7:1 on --paper */
   --accent-2: #8c1f40;
   --accent-soft: #e8d3cf;
-  --ember: #c4501f;      /* smoked paprika — accents only; 4.6:1 on --paper */
+  --ember: #c4501f;      /* smoked paprika — non-text accents only (3.9:1 on --paper) */
   --smoke: #1f1718;
   --smoke-2: #2b2122;
   --cream-on-dark: #f3ebdf;
-  --muted-on-dark: #c9b8aa; /* 9.6:1 on --smoke */
+  --muted-on-dark: #c9b8aa; /* 9.2:1 on --smoke */
   --brass: #b38a52;
   --line: rgb(28 18 20 / 0.14);
   --line-strong: rgb(28 18 20 / 0.28);

@@ -107,7 +107,7 @@ export function initProcess({ gsap, ScrollTrigger, lenis }) {
     animation: tl,
     onUpdate: (self) => {
       const t = self.progress * total;
-      setActive(Math.min(3, Math.floor(t + 0.08)));
+      setActive(Math.min(3, Math.floor(t)));
       bar?.style.setProperty('--p', self.progress.toFixed(3));
     },
     onToggle: (self) => svg.style.setProperty('will-change', self.isActive ? 'transform' : 'auto'),
