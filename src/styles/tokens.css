@@ -23,7 +23,7 @@
   --font-display: 'Bona Nova', 'Bona Nova Fallback', Georgia, 'Times New Roman', serif;
   --font-ui: 'Rubik', 'Rubik Fallback', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
 
-  --fs-hero: clamp(3.3rem, 0.9rem + 10.2vw, 12.5rem);
+  --fs-hero: clamp(3.3rem, 0.9rem + 10.2vw, 11rem);
   --fs-h2: clamp(2.5rem, 1.15rem + 4.6vw, 6.25rem);
   --fs-h3: clamp(1.35rem, 1.05rem + 1.05vw, 2.1rem);
   --fs-lead: clamp(1.1rem, 1rem + 0.45vw, 1.45rem);
