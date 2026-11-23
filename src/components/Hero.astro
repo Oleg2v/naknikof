@@ -94,6 +94,13 @@ const { t } = Astro.props;
   .hero__line { display: block; overflow: clip; padding-block: 0.04em 0.08em; margin-block: -0.04em -0.08em; }
   .hero__line--1 { padding-inline-start: 1.15em; }
   .hero__line--2 { color: var(--accent); }
+  /* Desktop "ember" beat: the accent word glows warmer where the pointer is (scripts/motion/hero.js sets --mx/--my). */
+  :global(.motion-ok) .hero__line--2 > .hero__lineIn:first-child {
+    background: radial-gradient(circle 1.1em at var(--mx, -50%) var(--my, 50%), #e2672e, var(--accent) 80%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
   .hero__tail {
     font-weight: 400;
     font-style: italic;

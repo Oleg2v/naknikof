@@ -10,6 +10,22 @@ export function initHero({ gsap, lite }) {
   if (orbit) gsap.to(orbit, { rotate: -50, ease: 'none', scrollTrigger: st });
   lines.forEach((l, i) => gsap.to(l, { xPercent: (i % 2 ? 1 : -1) * (4 + i * 2), ease: 'none', scrollTrigger: st }));
 
+  // Ember glow on the accent word follows the pointer.
+  const word = hero.querySelector('.hero__line--2 > .hero__lineIn');
+  if (word) {
+    let raf = 0;
+    hero.addEventListener('pointermove', (e) => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = 0;
+        const r = word.getBoundingClientRect();
+        word.style.setProperty('--mx', `${(((e.clientX - r.left) / r.width) * 100).toFixed(1)}%`);
+        word.style.setProperty('--my', `${(((e.clientY - r.top) / r.height) * 100).toFixed(1)}%`);
+      });
+    });
+    hero.addEventListener('pointerleave', () => word.style.setProperty('--mx', '-50%'));
+  }
+
   // Pointer tilt on the slice (subtle, desktop).
   if (slice) {
     const rx = gsap.quickTo(slice, 'x', { duration: 0.9, ease: 'power3.out' });
