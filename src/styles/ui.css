@@ -134,3 +134,31 @@
 @media (prefers-reduced-motion: reduce) {
   .js [data-reveal] { opacity: 1; transform: none; }
 }
+
+/* Desktop cursor companion (scripts/motion/cursor.js) */
+.cur { position: fixed; inset-block-start: 0; left: 0; z-index: 80; pointer-events: none; opacity: 0; transition: opacity 0.3s; }
+.cur.is-on { opacity: 1; }
+.cur.is-off { opacity: 0 !important; }
+.cur__ring {
+  position: absolute;
+  inline-size: 34px;
+  block-size: 34px;
+  margin: -17px 0 0 -17px;
+  border: 1.5px solid var(--accent);
+  border-radius: 50%;
+  transition: transform 0.4s var(--ease), background-color 0.3s, border-color 0.3s;
+}
+.cur.is-hover .cur__ring { transform: scale(1.5); background: rgb(110 22 52 / 0.08); }
+.cur.is-label .cur__ring { transform: scale(2.6); background: var(--accent); border-color: var(--accent); }
+.cur__label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -50%) scale(0.6);
+  opacity: 0;
+  color: var(--paper);
+  font: 600 12px/1 var(--font-ui);
+  white-space: nowrap;
+  transition: opacity 0.25s, transform 0.4s var(--ease);
+}
+.cur.is-label .cur__label { opacity: 1; transform: translate(-50%, -50%) scale(1); }

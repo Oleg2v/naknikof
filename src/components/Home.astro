@@ -2,6 +2,14 @@
 import Base from '../layouts/Base.astro';
 import Header from './Header.astro';
 import Hero from './Hero.astro';
+import Seminars from './Seminars.astro';
+import Process from './Process.astro';
+import Catalog from './Catalog.astro';
+import Calculator from './Calculator.astro';
+import Blog from './Blog.astro';
+import Trust from './Trust.astro';
+import Contacts from './Contacts.astro';
+import Footer from './Footer.astro';
 import WhatsAppFab from './WhatsAppFab.astro';
 import ReviewLauncher from './ReviewLauncher.astro';
 import '../styles/ui.css';
@@ -17,7 +25,19 @@ const lang = t.lang as 'ru' | 'he';
   <Header t={t} />
   <main id="main">
     <Hero t={t} />
+    <Seminars t={t} />
+    <Process t={t} />
+    <Catalog t={t} />
+    <Calculator t={t} />
+    <Blog t={t} />
+    <Trust t={t} />
+    <Contacts t={t} />
   </main>
+  <Footer t={t} />
   <WhatsAppFab label={t.a11y.whatsapp} text={lang === 'he' ? 'שלום! יש לי שאלה' : 'Здравствуйте! У меня вопрос'} />
   <ReviewLauncher lang={lang} />
 </Base>
+
+<script>
+  import '../scripts/main.js';
+</script>

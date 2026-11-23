@@ -1,0 +1,255 @@
+---
+import { Picture } from 'astro:assets';
+import CatIcon from './art/CatIcon.astro';
+import { CATEGORIES, POPULAR, LINKS } from '../data/catalog';
+import { formatPrice } from '../lib/format';
+import type { Copy } from '../i18n/ru';
+
+interface Props {
+  t: Copy;
+}
+const { t } = Astro.props;
+const lang = t.lang as 'ru' | 'he';
+---
+<section class="cat section" id="catalog" data-cid="catalog" aria-labelledby="cat-title">
+  <div class="wrap">
+    <header class="shead">
+      <p class="eyebrow"><span class="dot" aria-hidden="true"></span>{t.catalog.eyebrow}</p>
+      <h2 id="cat-title" data-reveal>{t.catalog.title}</h2>
+      <p data-reveal style="--rd:120ms">{t.catalog.lead}</p>
+    </header>
+
+    <ol class="cat__index" role="list" data-cid="categories">
+      {CATEGORIES.map((c, i) => (
+        <li data-reveal style={`--rd:${i * 50}ms`}>
+          <a class="cat__row" href={c.url} data-cursor={lang === 'he' ? 'לקטגוריה' : 'Открыть'}>
+            <span class="cat__n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <span class="cat__icon" aria-hidden="true"><CatIcon name={c.key} /></span>
+            <span class="cat__name">{c.title[lang]}</span>
+            <span class="cat__note">{c.note[lang]}</span>
+            <span class="cat__count">{t.catalog.count(c.count)}</span>
+            <svg class="cat__arr" width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><path d="M5 17L17 5M8 5h9v9" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+          </a>
+        </li>
+      ))}
+    </ol>
+
+    <div class="pop" data-cid="popular">
+      <div class="pop__head">
+        <h3 class="pop__title" data-reveal>{t.catalog.popularTitle}</h3>
+        <p class="pop__lead">{t.catalog.popularLead}</p>
+        <div class="pop__nav">
+          <button class="pop__btn" type="button" data-dir="-1" aria-label={t.catalog.prev}>
+            <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M11 3L5 9l6 6" fill="none" stroke="currentColor" stroke-width="1.7"/></svg>
+          </button>
+          <button class="pop__btn" type="button" data-dir="1" aria-label={t.catalog.next}>
+            <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M7 3l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.7"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <ul class="pop__rail" role="list" tabindex="0" aria-label={t.catalog.popularTitle}>
+        {POPULAR.map((p, i) => (
+          <li class="pcard" data-cid={`product-${i + 1}`}>
+            <a class="pcard__link" href={p.url} data-cursor={t.catalog.buy}>
+              <div class="pcard__media">
+                {p.image ? (
+                  <Picture src={p.image} formats={['avif', 'webp']} widths={[320, 480, 640]} sizes="(max-width: 640px) 72vw, 320px" alt={p.title[lang]} loading="lazy" decoding="async" />
+                ) : (
+                  <div class="ph" role="img" aria-label={`${p.title[lang]} — ${t.catalog.photoNeeded}`}>
+                    <CatIcon name={p.icon} />
+                    <span class="ph__tag" aria-hidden="true">{t.catalog.photoNeeded}</span>
+                  </div>
+                )}
+                {p.compareAt && <span class="pcard__badge">−{Math.round((1 - p.price / p.compareAt) * 100)}%</span>}
+              </div>
+              <div class="pcard__body">
+                <h4 class="pcard__title">{p.title[lang]}</h4>
+                <p class="pcard__spec">{p.spec[lang]}</p>
+                <p class="pcard__price">
+                  {p.from && <span class="pcard__from">{t.catalog.from}</span>}
+                  <span>{formatPrice(p.price, lang)}</span>
+                  {p.compareAt && <s class="pcard__old"><span class="sr-only">{lang === 'he' ? 'במקום' : 'вместо'} </span>{formatPrice(p.compareAt, lang)}</s>}
+                </p>
+              </div>
+              <span class="pcard__buy" aria-hidden="true">
+                {p.available ? t.catalog.buy : t.catalog.soldOut}
+                <svg width="14" height="14" viewBox="0 0 14 14"><path d="M3 11L11 3M5 3h6v6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+
+      <a class="btn btn--ghost pop__all" href={LINKS.all}>
+        {t.catalog.all}
+        <svg class="arr" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h12M9 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<script>
+  const rail = document.querySelector<HTMLElement>('.pop__rail');
+  const rtl = document.documentElement.dir === 'rtl';
+  document.querySelectorAll<HTMLButtonElement>('.pop__btn').forEach((b) =>
+    b.addEventListener('click', () => {
+      if (!rail) return;
+      const card = rail.querySelector<HTMLElement>('.pcard');
+      const step = (card?.offsetWidth ?? 300) + 20;
+      const dir = Number(b.dataset.dir) * (rtl ? -1 : 1);
+      rail.scrollBy({ left: dir * step, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    }),
+  );
+</script>
+
+<style>
+  .cat { background: var(--paper); }
+  .cat__index { border-block-start: 1px solid var(--line-strong); margin-block-end: clamp(72px, 9vw, 140px); }
+  .cat__index li { border-block-end: 1px solid var(--line-strong); }
+  .cat__row {
+    position: relative;
+    display: grid;
+    grid-template-columns: 3.2rem 0 minmax(0, 1.25fr) minmax(0, 1fr) auto 28px;
+    align-items: center;
+    gap: clamp(10px, 2vw, 28px);
+    padding-block: clamp(16px, 1.8vw, 24px);
+    text-decoration: none;
+    transition: grid-template-columns 0.6s var(--ease), color 0.3s;
+    isolation: isolate;
+  }
+  .cat__row::before {
+    content: '';
+    position: absolute;
+    inset: 0 calc(var(--gutter) * -0.5);
+    z-index: -1;
+    background: var(--accent);
+    clip-path: inset(50% 0 50% 0);
+    transition: clip-path 0.55s var(--ease);
+  }
+  .cat__n { font: 500 0.85rem/1 var(--font-ui); color: var(--ink-2); font-variant-numeric: tabular-nums; }
+  .cat__icon { overflow: hidden; color: var(--paper); display: grid; place-items: center; }
+  .cat__icon :global(svg) { inline-size: 44px; block-size: 44px; flex: none; }
+  .cat__name {
+    font: 700 clamp(1.6rem, 1.1rem + 1.9vw, 3.1rem) / 1.02 var(--font-display);
+    letter-spacing: var(--track-display);
+  }
+  .cat__note { color: var(--ink-2); font-size: 0.95rem; line-height: 1.4; }
+  .cat__count { font-size: var(--fs-small); font-weight: 600; white-space: nowrap; color: var(--accent); }
+  .cat__arr { color: var(--ink); transition: transform 0.5s var(--ease); }
+  :global([dir='rtl']) .cat__arr { transform: scaleX(-1); }
+
+  @media (hover: hover) {
+    .cat__row:hover, .cat__row:focus-visible { grid-template-columns: 3.2rem 52px minmax(0, 1.25fr) minmax(0, 1fr) auto 28px; color: var(--paper); }
+    .cat__row:hover::before, .cat__row:focus-visible::before { clip-path: inset(0 0 0 0); }
+    .cat__row:hover .cat__n, .cat__row:hover .cat__note, .cat__row:hover .cat__count, .cat__row:hover .cat__arr,
+    .cat__row:focus-visible .cat__n, .cat__row:focus-visible .cat__note, .cat__row:focus-visible .cat__count, .cat__row:focus-visible .cat__arr { color: var(--paper); }
+    .cat__row:hover .cat__arr { transform: rotate(45deg); }
+    :global([dir='rtl']) .cat__row:hover .cat__arr { transform: scaleX(-1) rotate(45deg); }
+  }
+
+  .pop__head {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: end;
+    gap: 16px 32px;
+    margin-block-end: 28px;
+  }
+  .pop__title { font: 700 var(--fs-h3) / 1 var(--font-display); font-size: clamp(2rem, 1.3rem + 2.4vw, 3.6rem); letter-spacing: var(--track-display); }
+  .pop__lead { color: var(--ink-2); max-inline-size: 42ch; }
+  .pop__nav { display: flex; gap: 8px; }
+  .pop__btn {
+    inline-size: 52px;
+    block-size: 52px;
+    border-radius: 50%;
+    border: 1.5px solid var(--line-strong);
+    background: transparent;
+    display: grid;
+    place-items: center;
+    transition: background 0.25s, color 0.25s, border-color 0.25s;
+  }
+  .pop__btn:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  :global([dir='rtl']) .pop__btn svg { transform: scaleX(-1); }
+
+  .pop__rail {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: clamp(250px, 23vw, 330px);
+    gap: 20px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+    padding-block: 8px 28px;
+    margin-inline: calc(var(--gutter) * -1);
+    padding-inline: var(--gutter);
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent) transparent;
+  }
+  .pop__rail:focus-visible { outline-offset: -4px; }
+  .pcard { scroll-snap-align: start; }
+  .pcard__link {
+    position: relative;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    block-size: 100%;
+    text-decoration: none;
+    border-radius: var(--radius-lg);
+    background: var(--paper-3);
+    box-shadow: 0 1px 0 var(--line);
+    overflow: hidden;
+    transition: transform 0.5s var(--ease), box-shadow 0.5s var(--ease);
+  }
+  .pcard__link:hover { transform: translateY(-6px); box-shadow: 0 30px 50px -30px rgb(60 20 20 / 0.35); }
+  .pcard__media {
+    position: relative;
+    aspect-ratio: 1;
+    background: #fff;
+    overflow: hidden;
+  }
+  .pcard__media :global(picture), .pcard__media :global(img) { inline-size: 100%; block-size: 100%; }
+  .pcard__media :global(img) { object-fit: contain; padding: 8%; transition: transform 0.8s var(--ease); }
+  .pcard__link:hover .pcard__media :global(img) { transform: scale(1.06); }
+  .pcard__media .ph { border-radius: 0; }
+  .pcard__badge {
+    position: absolute;
+    inset-block-start: 12px;
+    inset-inline-start: 12px;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: var(--ember);
+    color: #fff;
+    font: 700 0.8rem/1 var(--font-ui);
+  }
+  .pcard__body { padding: 18px 20px 6px; display: grid; gap: 6px; align-content: start; }
+  .pcard__title { font: 700 1.25rem/1.15 var(--font-display); }
+  .pcard__spec { font-size: var(--fs-small); color: var(--ink-2); }
+  .pcard__price { display: flex; align-items: baseline; gap: 8px; margin-block-start: 6px; font: 700 1.35rem/1 var(--font-ui); color: var(--accent); }
+  .pcard__from { font: 500 0.85rem/1 var(--font-ui); color: var(--ink-2); }
+  .pcard__old { font: 500 0.95rem/1 var(--font-ui); color: var(--ink-2); }
+  .pcard__buy {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 12px 20px 20px;
+    padding-block-start: 12px;
+    border-block-start: 1px solid var(--line);
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  :global([dir='rtl']) .pcard__buy svg { transform: scaleX(-1); }
+  .pop__all { margin-block-start: 12px; }
+
+  @media (max-width: 900px) {
+    .cat__row { grid-template-columns: 2.2rem minmax(0, 1fr) auto; row-gap: 4px; }
+    .cat__icon { display: none; }
+    .cat__note { grid-column: 2 / -1; grid-row: 2; font-size: 0.9rem; }
+    .cat__arr { display: none; }
+    .pop__head { grid-template-columns: 1fr auto; }
+    .pop__lead { grid-column: 1 / -1; grid-row: 2; }
+    .pop__rail { grid-auto-columns: 72vw; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cat__row, .cat__row::before, .pcard__link, .pcard__media :global(img) { transition: none; }
+  }
+</style>

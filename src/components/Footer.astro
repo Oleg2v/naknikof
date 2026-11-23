@@ -1,0 +1,90 @@
+---
+import { STORE } from '../data/store';
+import { CATEGORIES } from '../data/catalog';
+import type { Copy } from '../i18n/ru';
+interface Props {
+  t: Copy;
+}
+const { t } = Astro.props;
+const lang = t.lang as 'ru' | 'he';
+const f = t.footer;
+const year = new Date().getFullYear();
+const word = 'Kolbassnik'.split('');
+---
+<footer class="ft" data-cid="footer">
+  <div class="wrap">
+    <div class="ft__top">
+      <p class="ft__tag">{f.tagline}</p>
+      <nav class="ft__col" aria-label={f.shop}>
+        <h2 class="ft__h">{f.shop}</h2>
+        <ul role="list">
+          {CATEGORIES.slice(0, 6).map((c) => <li><a href={c.url}>{c.title[lang]}</a></li>)}
+          <li><a href={STORE.links.all}>{t.catalog.all}</a></li>
+        </ul>
+      </nav>
+      <nav class="ft__col" aria-label={f.info}>
+        <h2 class="ft__h">{f.info}</h2>
+        <ul role="list">
+          <li><a href={STORE.links.shipping}>{f.shipping}</a></li>
+          <li><a href={STORE.links.refund}>{f.returns}</a></li>
+          <li><a href={STORE.links.privacy}>{f.privacy}</a></li>
+          <li><a href={STORE.links.terms}>{f.terms}</a></li>
+          <li><a href={STORE.links.accessibility} hreflang="he" lang="he">{f.accessibility}</a></li>
+        </ul>
+      </nav>
+      <div class="ft__col">
+        <h2 class="ft__h">{t.contacts.eyebrow}</h2>
+        <ul role="list">
+          <li><a href={`tel:${STORE.phoneIntl.replace(/-/g, '')}`} dir="ltr">{STORE.phone}</a></li>
+          <li><a href={`mailto:${STORE.email}`} dir="ltr">{STORE.email}</a></li>
+          <li><a href={STORE.whatsapp} target="_blank" rel="noopener">WhatsApp</a></li>
+          <li><a href={STORE.telegram} target="_blank" rel="noopener">Telegram</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="ft__word" aria-hidden="true">
+      {word.map((ch, i) => <span data-reveal style={`--rd:${i * 45}ms`}>{ch}</span>)}
+    </p>
+
+    <div class="ft__bottom">
+      <p>{f.copyright(year)}</p>
+      <p class="ft__demo">{f.demo}</p>
+      <a class="ft__top-link" href="#top">{f.top} ↑</a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .ft { background: var(--smoke); color: var(--cream-on-dark); padding-block: clamp(56px, 7vw, 96px) 28px; border-block-start: 1px solid rgb(243 235 223 / 0.12); overflow: clip; }
+  .ft__top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 32px; }
+  .ft__tag { font: 400 italic clamp(1.6rem, 1.2rem + 1.4vw, 2.6rem) / 1.1 var(--font-display); max-inline-size: 16ch; color: var(--cream-on-dark); }
+  .ft__h { font: 600 var(--fs-eyebrow) / 1.2 var(--font-ui); letter-spacing: var(--track-eyebrow); text-transform: uppercase; color: #f0b49b; margin-block-end: 14px; }
+  :global([lang='he']) .ft__h { text-transform: none; font-size: 0.95rem; }
+  .ft__col ul { display: grid; gap: 8px; }
+  .ft__col a { text-decoration: none; color: var(--muted-on-dark); transition: color 0.2s; }
+  .ft__col a:hover { color: var(--cream-on-dark); text-decoration: underline; }
+  .ft__word {
+    display: flex;
+    justify-content: space-between;
+    margin-block: clamp(40px, 6vw, 80px) 12px;
+    font: 700 clamp(4.2rem, 17.4vw, 21rem) / 0.8 var(--font-display);
+    letter-spacing: -0.03em;
+    color: var(--accent);
+    direction: ltr;
+    overflow: clip;
+    padding-block-end: 0.06em;
+  }
+  .ft__word span { display: inline-block; }
+  :global(.js) .ft__word span[data-reveal] { transform: translateY(70%); opacity: 1; }
+  :global(.js) .ft__word span[data-reveal].is-in { transform: none; transition: transform 1.1s var(--ease); transition-delay: var(--rd); }
+  .ft__bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 24px; padding-block-start: 22px; border-block-start: 1px solid rgb(243 235 223 / 0.14); font-size: var(--fs-small); color: var(--muted-on-dark); }
+  .ft__top-link { color: var(--cream-on-dark); text-decoration: none; font-weight: 600; }
+  @media (max-width: 900px) {
+    .ft__top { grid-template-columns: 1fr 1fr; }
+    .ft__tag { grid-column: 1 / -1; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :global(.js) .ft__word span[data-reveal] { transform: none; }
+  }
+</style>

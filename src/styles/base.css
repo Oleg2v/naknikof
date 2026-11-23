@@ -9,6 +9,7 @@
 html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  font-variant-numeric: lining-nums;
   scroll-padding-block-start: 88px;
   hanging-punctuation: first last;
 }
@@ -86,3 +87,5 @@ bdi { unicode-bidi: isolate; }
     scroll-behavior: auto !important;
   }
 }
+
+[hidden] { display: none !important; }

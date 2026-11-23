@@ -14,6 +14,7 @@ export const STORE = {
   phone: '053-6242905',
   phoneIntl: '+972-53-624-2905',
   whatsapp: 'https://wa.me/972536242905',
+  telegram: 'https://t.me/kolbassnik',
   email: 'sakromail@gmail.com',
   address: {
     street: { ru: 'ул. Ха-Мелахим, 9', he: 'רחוב המלכים 9', en: 'HaMelakhim St 9' },

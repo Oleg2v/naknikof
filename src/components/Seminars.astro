@@ -1,0 +1,175 @@
+---
+/**
+ * Upcoming seminars — data/seminars.json (owner edits it; later via an admin).
+ * Past dates are hidden automatically at build time; the list is sorted by date.
+ */
+import { Image } from 'astro:assets';
+import data from '../../data/seminars.json';
+import SalamiSlice from './art/SalamiSlice.astro';
+import { formatDay, formatWeekday, formatTime, dayNumber, monthShort, formatPrice } from '../lib/format';
+import { waLink } from '../data/store';
+import type { Copy } from '../i18n/ru';
+
+interface Props {
+  t: Copy;
+}
+const { t } = Astro.props;
+const lang = t.lang as 'ru' | 'he';
+
+type Item = (typeof data.items)[number];
+const now = Date.now();
+const items = (data.items as Item[])
+  .filter((s) => new Date(s.date).getTime() > now - 86_400_000)
+  .sort((a, b) => +new Date(a.date) - +new Date(b.date));
+
+const images = import.meta.glob<{ default: ImageMetadata }>('../assets/seminars/*.{jpg,jpeg,png,webp,avif}', { eager: true });
+const img = (name: string | null) => (name ? images[`../assets/seminars/${name}`]?.default : undefined);
+const signup = (s: Item) =>
+  (s.signupUrl as string | null) ||
+  waLink(lang === 'he' ? `שלום! אשמח להירשם לסדנה "${s.title.he}"` : `Здравствуйте! Хочу записаться на семинар «${s.title.ru}»`);
+---
+<section class="sem section" id="seminars" data-cid="seminars" aria-labelledby="sem-title">
+  <div class="wrap">
+    <header class="shead">
+      <p class="eyebrow"><span class="dot" aria-hidden="true"></span>{t.seminars.eyebrow}</p>
+      <h2 id="sem-title" data-reveal>{t.seminars.title}</h2>
+      <p data-reveal style="--rd:120ms">{t.seminars.lead}</p>
+    </header>
+
+    {data.demo && <p class="sem__demo" role="note">{t.seminars.demoNote}</p>}
+
+    {items.length === 0 ? (
+      <p class="sem__empty">{t.seminars.empty}</p>
+    ) : (
+      <ol class="sem__list" role="list">
+        {items.map((s, i) => {
+          const photo = img(s.image);
+          return (
+            <li class="sem__item" data-reveal style={`--rd:${i * 90}ms`} data-cid={`seminar-${s.id}`}>
+              <article class="sem__card" aria-labelledby={`sem-${s.id}`}>
+                <time class="sem__date" datetime={s.date}>
+                  <span class="sem__day">{dayNumber(s.date)}</span>
+                  <span class="sem__mon">{monthShort(s.date, lang)}</span>
+                  <span class="sem__wd">{formatWeekday(s.date, lang)}, {formatTime(s.date)}</span>
+                </time>
+                <div class="sem__body">
+                  <h3 id={`sem-${s.id}`} class="sem__title">{s.title[lang]}</h3>
+                  <p class="sem__desc">{s.description[lang]}</p>
+                  <ul class="sem__meta" role="list">
+                    <li>{s.place[lang]}</li>
+                    <li>{t.seminars.hours(s.durationHours)}</li>
+                    {s.seats && <li>{t.seminars.seats(s.seats)}</li>}
+                    <li class="sr-only">{formatDay(s.date, lang, true)}</li>
+                  </ul>
+                </div>
+                <div class="sem__aside">
+                  <p class="sem__price">{s.priceILS ? formatPrice(s.priceILS, lang) : t.seminars.priceTbd}</p>
+                  <a class="btn btn--solid sem__cta" href={signup(s)} target="_blank" rel="noopener" aria-label={`${t.seminars.signup}: ${s.title[lang]} (${t.a11y.newTab})`}>
+                    {t.seminars.signup}
+                    <svg class="arr" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h12M9 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+                  </a>
+                </div>
+                <div class="sem__media" aria-hidden="true">
+                  {photo ? (
+                    <Image src={photo} alt="" widths={[240, 480]} sizes="240px" loading="lazy" />
+                  ) : (
+                    <>
+                      <SalamiSlice seed={31 + i * 7} specks={70} pepper={12} />
+                      {data.demo && <span class="ph__tag">{t.seminars.photoNeeded}</span>}
+                    </>
+                  )}
+                </div>
+              </article>
+            </li>
+          );
+        })}
+      </ol>
+    )}
+  </div>
+</section>
+
+<style>
+  .sem { background: var(--paper); }
+  .sem__demo {
+    display: inline-block;
+    margin-block-end: 20px;
+    padding: 6px 12px;
+    border: 1px dashed color-mix(in srgb, var(--accent) 50%, transparent);
+    border-radius: 999px;
+    font-size: var(--fs-small);
+    color: var(--accent);
+  }
+  .sem__list { border-block-start: 1px solid var(--line-strong); }
+  .sem__item { border-block-end: 1px solid var(--line-strong); }
+  .sem__card {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(120px, 2fr) minmax(0, 6fr) minmax(180px, 3fr);
+    gap: clamp(16px, 3vw, 48px);
+    align-items: center;
+    padding-block: clamp(24px, 3.2vw, 44px);
+    padding-inline: clamp(0px, 1vw, 16px);
+    isolation: isolate;
+  }
+  .sem__card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--paper-2);
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform 0.6s var(--ease);
+  }
+  .sem__card:hover::before, .sem__card:focus-within::before { transform: none; }
+  .sem__date { display: grid; grid-template-columns: auto 1fr; align-items: end; column-gap: 12px; }
+  .sem__day {
+    grid-row: span 2;
+    font: 700 clamp(3.2rem, 2rem + 4vw, 6.4rem) / 0.8 var(--font-display);
+    color: var(--accent);
+    font-variant-numeric: lining-nums;
+  }
+  .sem__mon { font: 400 italic 1.6rem/1 var(--font-display); color: var(--ink); }
+  .sem__wd { font-size: var(--fs-small); color: var(--ink-2); padding-block-end: 0.35em; }
+  .sem__title {
+    font: 700 var(--fs-h3) / 1.05 var(--font-display);
+    letter-spacing: var(--track-display);
+    margin-block-end: 10px;
+  }
+  .sem__desc { color: var(--ink-2); max-inline-size: 58ch; }
+  .sem__meta { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-block-start: 14px; font-size: var(--fs-small); font-weight: 500; }
+  .sem__meta li { display: inline-flex; align-items: center; gap: 8px; }
+  .sem__meta li:not(.sr-only) + li:not(.sr-only)::before { content: ''; inline-size: 4px; block-size: 4px; border-radius: 50%; background: var(--ember); }
+  .sem__aside { display: grid; justify-items: end; gap: 14px; }
+  .sem__price { font: 700 1.7rem/1 var(--font-display); }
+  .sem__media {
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-end: 26%;
+    inline-size: 150px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    transform: translateY(-50%) scale(0.6) rotate(-30deg);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.7s var(--ease), opacity 0.4s;
+  }
+  .sem__media :global(img), .sem__media :global(svg) { inline-size: 100%; block-size: 100%; object-fit: cover; border-radius: 50%; }
+  .sem__media .ph__tag { inset-block-end: -6px; inset-inline-start: 50%; translate: -50% 0; white-space: nowrap; }
+  :global([dir='rtl']) .sem__media .ph__tag { translate: 50% 0; }
+  @media (hover: hover) and (min-width: 1000px) {
+    .sem__card:hover .sem__media { opacity: 1; transform: translateY(-50%) scale(1) rotate(0deg); }
+  }
+  .sem__empty { font-size: var(--fs-lead); color: var(--ink-2); }
+
+  @media (max-width: 900px) {
+    .sem__card { grid-template-columns: 1fr; align-items: start; gap: 18px; padding-inline: 0; }
+    .sem__date { grid-template-columns: auto auto; justify-content: start; }
+    .sem__aside { justify-items: start; grid-template-columns: auto auto; align-items: center; justify-content: space-between; }
+    .sem__card::before { display: none; }
+    .sem__media { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sem__card::before, .sem__media { transition: none; }
+  }
+</style>

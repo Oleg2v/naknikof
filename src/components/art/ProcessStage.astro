@@ -1,0 +1,176 @@
+---
+/**
+ * "From meat to sausage" — ONE stage, one sausage that goes through four states.
+ * state 0 casing · 1 stuffing · 2 smoking · 3 slicing — static plates (mobile, no-JS, reduced motion)
+ * state 'anim' — every layer present; scripts/motion/process.js drives it with a scrubbed timeline.
+ * No text inside the SVG (all words live in HTML). In RTL the drawing is mirrored by CSS.
+ */
+import SalamiSlice from './SalamiSlice.astro';
+
+interface Props {
+  state: 0 | 1 | 2 | 3 | 'anim';
+  label: string;
+  uid: string;
+}
+const { state, label, uid } = Astro.props;
+const id = `pst-${uid}`;
+
+// deterministic helpers
+let seed = 17;
+const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+const pleats = Array.from({ length: 15 }, (_, i) => 108 + i * 9.2);
+const grain = Array.from({ length: 7 }, (_, i) => 578 + i * 9 + rnd() * 3);
+const embers = Array.from({ length: 11 }, (_, i) => ({ x: 270 + i * 66 + rnd() * 20, y: 700 + rnd() * 26, r: 14 + rnd() * 16 }));
+const smoke = [380, 500, 620, 740, 860].map((x, i) => {
+  const w = 26 + (i % 2) * 12;
+  return `M${x} 690 C ${x - w} 620, ${x + w} 570, ${x} 500 S ${x - w} 400, ${x + 4} 330 S ${x + w} 220, ${x - 6} 120`;
+});
+const st = state === 'anim' ? 'anim' : `st-${state}`;
+---
+<svg class={`pstage ${st}`} viewBox="0 0 1200 800" role="img" aria-label={label} focusable="false" data-stage={state}>
+  <defs>
+    <linearGradient id={`${id}-raw`} x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#e38b95" />
+      <stop offset="1" stop-color="#a5374e" />
+    </linearGradient>
+    <linearGradient id={`${id}-smoked`} x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#a24a2a" />
+      <stop offset="0.6" stop-color="#6b2416" />
+      <stop offset="1" stop-color="#3d120b" />
+    </linearGradient>
+    <linearGradient id={`${id}-steel`} x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#eef0f2" />
+      <stop offset="0.5" stop-color="#b9bec5" />
+      <stop offset="1" stop-color="#868c95" />
+    </linearGradient>
+    <radialGradient id={`${id}-ember`} cx="0.5" cy="1" r="0.9">
+      <stop offset="0" stop-color="#ff8a3d" stop-opacity=".95" />
+      <stop offset="0.5" stop-color="#c4501f" stop-opacity=".35" />
+      <stop offset="1" stop-color="#c4501f" stop-opacity="0" />
+    </radialGradient>
+    <pattern id={`${id}-mince`} width="26" height="26" patternUnits="userSpaceOnUse">
+      <ellipse cx="5" cy="7" rx="3.2" ry="2.4" fill="#f7e0d3" opacity=".8" />
+      <ellipse cx="17" cy="18" rx="2.4" ry="1.8" fill="#f7e0d3" opacity=".65" />
+      <circle cx="20" cy="5" r="1.2" fill="#4a0f1c" opacity=".55" />
+      <circle cx="8" cy="20" r="1.1" fill="#4a0f1c" opacity=".5" />
+    </pattern>
+    <clipPath id={`${id}-body`}><rect x="250" y="355" width="750" height="90" rx="45" /></clipPath>
+    <clipPath id={`${id}-left`}><rect x="0" y="0" width="805" height="800" /></clipPath>
+  </defs>
+
+  <g class="flip">
+    <!-- smoke-house glow + embers (chapter 3) -->
+    <g class="l-embers">
+      <ellipse cx="620" cy="800" rx="560" ry="230" fill={`url(#${id}-ember)`} />
+      {embers.map((e) => <ellipse cx={e.x.toFixed(0)} cy={e.y.toFixed(0)} rx={e.r.toFixed(0)} ry={(e.r * 0.45).toFixed(0)} fill="#7b2a12" />)}
+      {embers.filter((_, i) => i % 2 === 0).map((e) => <ellipse cx={e.x.toFixed(0)} cy={(e.y - 3).toFixed(0)} rx={(e.r * 0.45).toFixed(0)} ry={(e.r * 0.18).toFixed(0)} fill="#ff9a4d" opacity=".85" />)}
+    </g>
+
+    <!-- board -->
+    <g class="l-board">
+      <ellipse cx="610" cy="672" rx="470" ry="22" fill="#000" opacity=".08" />
+      <rect x="130" y="560" width="940" height="96" rx="22" fill="#b4864f" />
+      <rect x="130" y="560" width="940" height="16" rx="8" fill="#cfa16b" />
+      <g fill="none" stroke="#986a38" stroke-width="2" opacity=".55">
+        {grain.map((y, i) => <path d={`M160 ${y.toFixed(1)} C 420 ${(y + (i % 2 ? 8 : -6)).toFixed(1)}, 760 ${(y + (i % 2 ? -7 : 9)).toFixed(1)}, 1040 ${(y + 2).toFixed(1)}`} />)}
+      </g>
+    </g>
+
+    <!-- stuffer horn (chapters 1–2) -->
+    <g class="l-horn">
+      <rect x="-90" y="300" width="160" height="200" rx="20" fill={`url(#${id}-steel)`} />
+      <rect x="-90" y="300" width="160" height="22" rx="10" fill="#9ba1a9" />
+      <path d="M70 372 L252 386 L252 414 L70 428 Z" fill={`url(#${id}-steel)`} />
+      <g class="l-shirr" fill="#f1e4cb" stroke="#c7ae86" stroke-width="2">
+        {pleats.map((x) => <ellipse cx={x.toFixed(1)} cy="400" rx="5.5" ry="27" />)}
+      </g>
+    </g>
+
+    <!-- hook (chapter 3) -->
+    <g class="l-hook" fill="none" stroke="#8a6d4a" stroke-width="4" stroke-linecap="round">
+      <path d="M625 0 V 300" />
+      <path d="M612 300 q 13 22 26 0" />
+    </g>
+
+    <!-- the sausage -->
+    <g class="l-sausage">
+      <g class="l-left">
+        <rect class="l-casingFill" x="250" y="355" width="750" height="90" rx="45" fill="#f1e4cb" fill-opacity=".5" />
+        <g clip-path={`url(#${id}-body)`}>
+          <g class="l-fill">
+            <rect x="250" y="355" width="750" height="90" fill={`url(#${id}-raw)`} />
+            <rect x="250" y="355" width="750" height="90" fill={`url(#${id}-mince)`} />
+          </g>
+          <rect class="l-smoked" x="250" y="355" width="750" height="90" fill={`url(#${id}-smoked)`} />
+          <rect class="l-sheen" x="270" y="366" width="700" height="12" rx="6" fill="#fff" opacity=".22" />
+        </g>
+        <rect class="l-outline" x="250" y="355" width="750" height="90" rx="45" fill="none" stroke="#b99a6c" stroke-width="3" pathLength="1" />
+      </g>
+      <g class="l-ties">
+        {[500, 750].map((x) => (
+          <g>
+            <path d={`M${x - 12} 351 Q ${x} 400 ${x - 12} 449 L ${x + 12} 449 Q ${x} 400 ${x + 12} 351 Z`} class="l-pinch" />
+            <path d={`M${x} 343 V 457`} stroke="#8a6d4a" stroke-width="5" stroke-linecap="round" />
+            <path d={`M${x - 10} 339 q 10 12 20 0`} fill="none" stroke="#8a6d4a" stroke-width="3.5" stroke-linecap="round" />
+          </g>
+        ))}
+      </g>
+    </g>
+
+    <!-- smoke (chapter 3) -->
+    <g class="l-smoke" fill="none" stroke="#f3ebdf" stroke-width="9" stroke-linecap="round">
+      {smoke.map((d) => <path d={d} pathLength="1" />)}
+    </g>
+
+    <!-- slicing (chapter 4) -->
+    <g class="l-cut">
+      <g transform="translate(806 400) scale(0.2 0.41)">
+        <SalamiSlice seed={5} specks={60} pepper={10} nested uid={uid} />
+      </g>
+      {[0, 1, 2, 3].map((i) => (
+        <g class="l-slice" style={`--i:${i}`}>
+          <g transform={`translate(${880 + i * 70} ${402 - i * 3}) rotate(${-4 + i * 4}) scale(0.24 0.43)`}>
+            <SalamiSlice seed={6 + i * 4} specks={60} pepper={10} nested uid={uid} />
+          </g>
+        </g>
+      ))}
+    </g>
+    <g class="l-knife">
+      <path d="M790 130 L824 130 L838 345 L800 360 Z" fill={`url(#${id}-steel)`} />
+      <path d="M790 130 L800 360" stroke="#fff" stroke-width="2" opacity=".6" />
+      <rect x="782" y="58" width="50" height="78" rx="12" fill="#2a1d1b" />
+      <circle cx="807" cy="82" r="4" fill="#c9b8aa" />
+      <circle cx="807" cy="110" r="4" fill="#c9b8aa" />
+    </g>
+  </g>
+</svg>
+
+<style>
+  .pstage { inline-size: 100%; block-size: auto; overflow: hidden; }
+  :global([dir='rtl']) .pstage .flip { transform: scaleX(-1); transform-origin: 600px 400px; transform-box: view-box; }
+  .l-pinch { fill: var(--stage-bg, #f3ebdf); }
+  .l-sausage, .l-fill, .l-smoked, .l-knife, .l-slice, .l-hook, .l-embers, .l-smoke, .l-board, .l-horn, .l-shirr, .l-ties, .l-cut { transform-box: fill-box; }
+  .l-fill { transform-origin: 0% 50%; }
+
+  /* ---------- static plates ---------- */
+  .st-0 .l-fill { transform: scaleX(0); }
+  .st-0 .l-smoked, .st-1 .l-smoked { opacity: 0; }
+  .st-0 .l-ties, .st-0 .l-embers, .st-0 .l-smoke, .st-0 .l-hook, .st-0 .l-knife, .st-0 .l-cut { display: none; }
+  .st-0 .l-outline { stroke-dasharray: 1; stroke-dashoffset: 0; }
+
+  .st-1 .l-shirr, .st-1 .l-embers, .st-1 .l-smoke, .st-1 .l-hook, .st-1 .l-knife, .st-1 .l-cut { display: none; }
+
+  .st-2 .l-board, .st-2 .l-horn, .st-2 .l-knife, .st-2 .l-cut { display: none; }
+  .st-2 .l-sausage { transform: translateY(-80px); }
+  .st-2 .l-smoke { opacity: 0.35; }
+
+  .st-3 .l-horn, .st-3 .l-embers, .st-3 .l-smoke, .st-3 .l-hook { display: none; }
+  .st-3 .l-left { clip-path: inset(0 22.5% 0 0); }
+  .st-3 .l-ties g:last-child { display: none; }
+  .st-3 .l-knife { transform: translate(-6px, 40px); }
+
+  /* ---------- animated stage: initial state is set by GSAP; until then show chapter 1 ---------- */
+  .anim .l-embers, .anim .l-smoke, .anim .l-hook, .anim .l-knife, .anim .l-cut, .anim .l-ties { opacity: 0; }
+  .anim .l-smoked { opacity: 0; }
+  .anim .l-fill { transform: scaleX(0); }
+</style>

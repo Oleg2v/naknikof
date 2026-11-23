@@ -99,7 +99,7 @@ const { t } = Astro.props;
   }
   .hero__lineIn {
     display: inline-block;
-    animation: lineIn 1.05s var(--ease) both;
+    animation: lineIn 1.05s var(--ease) backwards;
     animation-delay: var(--d, 0ms);
   }
   @keyframes lineIn {
@@ -118,7 +118,7 @@ const { t } = Astro.props;
   .hero__slice {
     position: absolute;
     inset: 9%;
-    animation: sliceIn 1.6s var(--ease) both 0.15s;
+    animation: sliceIn 1.6s var(--ease) backwards 0.15s;
     filter: drop-shadow(0 40px 60px rgb(60 10 20 / 0.28));
   }
   .hero__slice :global(svg) { inline-size: 100%; block-size: 100%; }
@@ -134,7 +134,7 @@ const { t } = Astro.props;
     letter-spacing: 0.32em;
     text-transform: uppercase;
     fill: var(--ink-2);
-    animation: orbitIn 1.4s var(--ease) both 0.5s;
+    animation: orbitIn 1.4s var(--ease) backwards 0.5s;
   }
   :global([lang='he']) .hero__orbit { letter-spacing: 0.08em; font-size: 14px; }
   @keyframes orbitIn { from { opacity: 0; transform: rotate(-30deg); } }
@@ -146,7 +146,7 @@ const { t } = Astro.props;
     display: grid;
     gap: 28px;
     margin-block-start: clamp(8px, 2vw, 24px);
-    animation: fadeUp 1s var(--ease) both 0.45s;
+    animation: fadeUp 1s var(--ease) backwards 0.45s;
   }
   .hero__lead {
     max-inline-size: 36ch;
@@ -165,7 +165,7 @@ const { t } = Astro.props;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     margin: clamp(24px, 5vw, 64px) 0 0;
     border-block-start: 1px solid var(--line-strong);
-    animation: fadeUp 1s var(--ease) both 0.6s;
+    animation: fadeUp 1s var(--ease) backwards 0.6s;
   }
   .hero__stat { padding-block: 18px 4px; padding-inline-end: 16px; }
   .hero__stat + .hero__stat { padding-inline-start: clamp(12px, 2vw, 28px); border-inline-start: 1px solid var(--line); }
