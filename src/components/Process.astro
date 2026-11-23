@@ -34,7 +34,7 @@ const stageKeys = ['casing', 'stuffing', 'smoking', 'slicing'] as const;
           const key = stageKeys[i];
           const pick = STAGE_PICKS[key];
           return (
-            <li class="proc__ch" data-ch={i} data-cid={`process-${key}`}>
+            <li class:list={["proc__ch", { "is-current": i === 0 }]} data-ch={i} data-cid={`process-${key}`}>
               <figure class="proc__plate">
                 <ProcessStage state={i as 0 | 1 | 2 | 3} label={`${c.word}: ${c.title}`} uid={`p${i}`} />
               </figure>
@@ -166,6 +166,8 @@ const stageKeys = ['casing', 'stuffing', 'smoking', 'slicing'] as const;
   :global(.motion-ok) .proc .proc__word { font-size: min(7.6rem, 21cqi); }
   :global(.motion-ok) .proc .proc__ch { position: absolute; inset: 0; display: flex; align-items: center; padding: 0; opacity: 0; }
   :global(.motion-ok) .proc .proc__ch:first-child { opacity: 1; }
+  /* chapters are stacked; only the current one takes clicks (the others are transparent, not hidden, so they stay tabbable) */
+  :global(.motion-ok) .proc .proc__ch:not(.is-current) { pointer-events: none; }
   :global(.motion-ok) .proc .proc__plate { display: none; }
   :global(.motion-ok) .proc .proc__txt { inline-size: 100%; }
   :global(.motion-ok) .proc .proc__rail {

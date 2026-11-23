@@ -90,6 +90,7 @@ export function initProcess({ gsap, ScrollTrigger, lenis }) {
   const setActive = (i) => {
     if (i === active) return;
     active = i;
+    chapters.forEach((ch, k) => ch.classList.toggle('is-current', k === i));
     ticks.forEach((t, k) => {
       t.classList.toggle('is-on', k === i);
       if (k === i) t.setAttribute('aria-current', 'step');
