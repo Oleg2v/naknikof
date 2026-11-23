@@ -22,6 +22,7 @@ export const ru = {
     newTab: 'откроется в новой вкладке',
     logo: 'Kolbassnik — на главную',
     home: 'главная',
+    promo: 'Условия доставки',
     langCurrent: 'Сейчас',
   },
   topbar: [

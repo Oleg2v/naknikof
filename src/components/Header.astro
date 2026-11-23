@@ -19,11 +19,11 @@ const nav = [
   ['#contacts', t.nav.contacts],
 ] as const;
 ---
-<div class="topbar" data-cid="topbar">
+<aside class="topbar" data-cid="topbar" aria-label={t.a11y.promo}>
   <div class="topbar__track" aria-live="off">
     {t.topbar.map((line, i) => <p class="topbar__item" data-i={i}>{line}</p>)}
   </div>
-</div>
+</aside>
 
 <header class="hdr" data-cid="header">
   <div class="hdr__inner wrap">
