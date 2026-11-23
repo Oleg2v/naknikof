@@ -28,7 +28,7 @@ const lang = t.lang as 'ru' | 'he';
             </p>
             <h3 class="post__title">{p.title[lang]}</h3>
             {p.quote ? (
-              <blockquote class="post__quote"><p>«{p.quote[lang]}»</p></blockquote>
+              <blockquote class="post__quote"><p>{lang === 'he' ? `"${p.quote[lang]}"` : `«${p.quote[lang]}»`}</p></blockquote>
             ) : (
               <p class="post__excerpt post__excerpt--lg">{p.excerpt[lang]}</p>
             )}

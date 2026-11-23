@@ -26,6 +26,11 @@ export function initCalc() {
     $('[data-rate-max]').textContent = `${nf(0).format(s.max)} ${i18n.g}`;
     $('[data-kind-note]').textContent = i18n[k];
     $('[data-nitrate-row]').hidden = k !== 'n2';
+    const buy = $('[data-calc-buy]');
+    if (buy) {
+      buy.textContent = k === 'n2' ? i18n.buy2 : i18n.buy06;
+      buy.href = k === 'n2' ? i18n.href2 : i18n.href06;
+    }
     update();
   }
 
@@ -34,7 +39,7 @@ export function initCalc() {
     if (!Number.isFinite(kg)) kg = 0;
     if (source !== 'typing') {
       kg = clampKg(kg);
-      meat.value = String(kg);
+      meat.value = new Intl.NumberFormat(lang, { maximumFractionDigits: 1 }).format(kg);
     }
     meatRange.value = String(clampKg(kg || MEAT.min));
     chips.forEach((c) => c.classList.toggle('is-on', Number(c.dataset.kg) === kg));
@@ -58,6 +63,13 @@ export function initCalc() {
   form.querySelectorAll('[name="kind"]').forEach((el) => el.addEventListener('change', () => setKind(el.value)));
   meat.addEventListener('input', () => update('typing'));
   meat.addEventListener('change', () => update());
+  meat.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      meat.value = String(clampKg((parseFloat(String(meat.value).replace(',', '.')) || 0) + (e.key === 'ArrowUp' ? 0.1 : -0.1)));
+      update();
+    }
+  });
   meatRange.addEventListener('input', () => {
     meat.value = meatRange.value;
     update();
@@ -65,7 +77,7 @@ export function initCalc() {
   rate.addEventListener('input', () => update());
   form.querySelectorAll('[data-step]').forEach((b) =>
     b.addEventListener('click', () => {
-      meat.value = String(clampKg((parseFloat(meat.value) || 0) + Number(b.dataset.step)));
+      meat.value = String(clampKg((parseFloat(String(meat.value).replace(',', '.')) || 0) + Number(b.dataset.step)));
       update();
     }),
   );

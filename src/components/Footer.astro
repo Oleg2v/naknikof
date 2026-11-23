@@ -25,11 +25,15 @@ const word = 'Kolbassnik'.split('');
       <nav class="ft__col" aria-label={f.info}>
         <h2 class="ft__h">{f.info}</h2>
         <ul role="list">
-          <li><a href={STORE.links.shipping}>{f.shipping}</a></li>
-          <li><a href={STORE.links.refund}>{f.returns}</a></li>
-          <li><a href={STORE.links.privacy}>{f.privacy}</a></li>
-          <li><a href={STORE.links.terms}>{f.terms}</a></li>
-          <li><a href={STORE.links.accessibility} hreflang="he" lang="he">{f.accessibility}</a></li>
+          {[
+            [STORE.links.shipping, f.shipping],
+            [STORE.links.refund, f.returns],
+            [STORE.links.privacy, f.privacy],
+            [STORE.links.terms, f.terms],
+            [STORE.links.accessibility, f.accessibility],
+          ].map(([href, label]) => (
+            <li><a href={href} hreflang="he">{label}{f.heOnly && <span class="ft__he"> ({f.heOnly})</span>}</a></li>
+          ))}
         </ul>
       </nav>
       <div class="ft__col">
@@ -64,6 +68,7 @@ const word = 'Kolbassnik'.split('');
   .ft__col ul { display: grid; gap: 8px; }
   .ft__col a { text-decoration: none; color: var(--muted-on-dark); transition: color 0.2s; }
   .ft__col a:hover { color: var(--cream-on-dark); text-decoration: underline; }
+  .ft__he { font-size: 0.85em; opacity: 0.75; }
   .ft__word {
     display: flex;
     justify-content: space-between;

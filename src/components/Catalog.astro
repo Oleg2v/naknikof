@@ -56,7 +56,7 @@ const lang = t.lang as 'ru' | 'he';
                 {p.image ? (
                   <Picture src={p.image} formats={['avif', 'webp']} widths={[320, 480, 640]} sizes="(max-width: 640px) 72vw, 320px" alt={p.title[lang]} loading="lazy" decoding="async" />
                 ) : (
-                  <div class="ph" role="img" aria-label={`${p.title[lang]} — ${t.catalog.photoNeeded}`}>
+                  <div class="ph" role="img" aria-label={p.title[lang]}>
                     <CatIcon name={p.icon} />
                     <span class="ph__tag" aria-hidden="true">{t.catalog.photoNeeded}</span>
                   </div>

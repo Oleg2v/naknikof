@@ -72,7 +72,7 @@ export const CATEGORIES: Category[] = [
     url: col('оборудование'),
     count: 25,
     title: { ru: 'Оборудование и инструменты', he: 'ציוד וכלי עבודה' },
-    note: { ru: 'Колбасные шприцы, термометры, весы, ножи и доски', he: 'ממלאות נקניקים, מדחומים, משקלים, סכינים וקרשי חיתוך' },
+    note: { ru: 'Колбасные шприцы, термометры, весы, доски и мусаты', he: 'ממלאות נקניקים, מדחומים, משקלים, קרשי חיתוך ומוטות השחזה' },
     stage: 'stuffing',
   },
   {
@@ -80,7 +80,7 @@ export const CATEGORIES: Category[] = [
     url: col('shchepa-dlya-kopcheniya'),
     count: 20,
     title: { ru: 'Гриль, копчение и щепа', he: 'גריל, עישון ושבבי עץ' },
-    note: { ru: 'Щепа, стружка для холодного копчения, чанки, аксессуары', he: 'שבבי עץ, נסורת לעישון קר, גושי עץ ואביזרים' },
+    note: { ru: 'Щепа, стружка для холодного копчения, коптильные коробки и аксессуары для гриля', he: 'שבבי עץ, נסורת לעישון קר, קופסאות עישון ואביזרים לגריל' },
     stage: 'smoking',
   },
   {
@@ -103,7 +103,7 @@ export const CATEGORIES: Category[] = [
     url: col('наборы-1'),
     count: 1,
     title: { ru: 'Наборы', he: 'ערכות' },
-    note: { ru: 'Всё нужное для рецепта в одной коробке', he: 'כל מה שצריך למתכון — בקופסה אחת' },
+    note: { ru: 'Набор щепы: бук, ольха, дуб и вишня, 4 × 500 г', he: 'ערכת שבבי עץ: אשור, אלמון, אלון ודובדבן, ‎4×500 גרם' },
   },
   {
     key: 'gift',
@@ -206,6 +206,14 @@ export const STAGE_PICKS = {
   stuffing: { ru: 'Колбасный шприц — от 770 ₪', he: 'ממלאת נקניקים — החל מ־770 ₪', url: enc('kolbasnyi-shpric') },
   smoking: { ru: 'Щепа клён, 5 л — 50 ₪', he: 'שבבי מייפל, 5 ליטר — 50 ₪', url: enc('shchepa-dlya-kopcheniya-klen-hickory-5l') },
   slicing: { ru: 'Разделочная доска 45 × 30 — 210 ₪', he: 'קרש חיתוך 45‎×30‏ — 210 ₪', url: enc('butcher') },
+} as const;
+
+/** Where each story chapter leads (real collections). */
+export const STAGE_LINKS = {
+  casing: col('оболочки-для-колбасных-изделий'),
+  stuffing: col('добавки'),
+  smoking: col('shchepa-dlya-kopcheniya'),
+  slicing: col('ножи-и-разделочные-доски'),
 } as const;
 
 export const LINKS = {

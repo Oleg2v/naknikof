@@ -38,9 +38,8 @@ const signup = (s: Item) =>
 
     {data.demo && <p class="sem__demo" role="note">{t.seminars.demoNote}</p>}
 
-    {items.length === 0 ? (
-      <p class="sem__empty">{t.seminars.empty}</p>
-    ) : (
+    <p class="sem__empty" data-sem-empty hidden={items.length > 0}>{t.seminars.empty}</p>
+    {items.length > 0 && (
       <ol class="sem__list" role="list">
         {items.map((s, i) => {
           const photo = img(s.image);
@@ -87,6 +86,19 @@ const signup = (s: Item) =>
     )}
   </div>
 </section>
+
+<script>
+  // The page is static: hide seminars that already took place since the last build.
+  const now = Date.now();
+  const list = document.querySelector('.sem__list');
+  document.querySelectorAll<HTMLTimeElement>('.sem__item time[datetime]').forEach((t) => {
+    if (new Date(t.dateTime).getTime() < now - 6 * 3600_000) t.closest('.sem__item')?.remove();
+  });
+  if (list && !list.children.length) {
+    list.remove();
+    document.querySelector<HTMLElement>('[data-sem-empty]')?.removeAttribute('hidden');
+  }
+</script>
 
 <style>
   .sem { background: var(--paper); }

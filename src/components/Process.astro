@@ -4,7 +4,7 @@
  * or four static plates (mobile, no-JS, prefers-reduced-motion). Same text DOM in both modes.
  */
 import ProcessStage from './art/ProcessStage.astro';
-import { CATEGORIES, STAGE_PICKS } from '../data/catalog';
+import { STAGE_PICKS, STAGE_LINKS } from '../data/catalog';
 import type { Copy } from '../i18n/ru';
 
 interface Props {
@@ -13,7 +13,6 @@ interface Props {
 const { t } = Astro.props;
 const lang = t.lang as 'ru' | 'he';
 const chapters = t.process.chapters;
-const catFor = (stage: string) => CATEGORIES.find((c) => c.stage === stage) ?? CATEGORIES[0];
 const stageKeys = ['casing', 'stuffing', 'smoking', 'slicing'] as const;
 ---
 <section class="proc" id="process" data-cid="process" aria-labelledby="proc-title">
@@ -33,7 +32,6 @@ const stageKeys = ['casing', 'stuffing', 'smoking', 'slicing'] as const;
       <ol class="proc__chapters" role="list">
         {chapters.map((c, i) => {
           const key = stageKeys[i];
-          const cat = catFor(key);
           const pick = STAGE_PICKS[key];
           return (
             <li class="proc__ch" data-ch={i} data-cid={`process-${key}`}>
@@ -48,7 +46,7 @@ const stageKeys = ['casing', 'stuffing', 'smoking', 'slicing'] as const;
                 <p class="proc__chTitle">{c.title}</p>
                 <p class="proc__chText">{c.text}</p>
                 <div class="proc__links">
-                  <a class="link-arrow" href={cat.url}>
+                  <a class="link-arrow" href={STAGE_LINKS[key]}>
                     {c.cta}
                     <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 11L11 3M5 3h6v6" fill="none" stroke="currentColor" stroke-width="1.6" /></svg>
                   </a>

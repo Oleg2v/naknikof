@@ -71,8 +71,8 @@ const fmt = (n: number, d = 0) => new Intl.NumberFormat(lang === 'ru' ? 'ru-RU' 
         <label class="calc__label" for="calc-meat">{c.meat}</label>
         <div class="calc__num">
           <button type="button" class="calc__step" data-step="-0.5" aria-label={c.less}>−</button>
-          <input id="calc-meat" name="meat" type="number" inputmode="decimal" min={MEAT.min} max={MEAT.max} step={MEAT.step} value={MEAT.def} />
-          <span class="calc__unit">{c.kg}</span>
+          <input id="calc-meat" name="meat" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" pattern="[0-9]+([.,][0-9]+)?" value={String(MEAT.def)} aria-describedby="calc-meat-unit" />
+          <span class="calc__unit" id="calc-meat-unit">{c.kg}</span>
           <button type="button" class="calc__step" data-step="0.5" aria-label={c.more}>+</button>
         </div>
         <input class="calc__range" name="meatRange" type="range" min={MEAT.min} max={MEAT.max} step={MEAT.step} value={MEAT.def} aria-label={c.meat} />
@@ -102,7 +102,7 @@ const fmt = (n: number, d = 0) => new Intl.NumberFormat(lang === 'ru' ? 'ru-RU' 
       <p class="calc__review">{c.reviewNote}</p>
 
       <div class="calc__buy">
-        <a class="btn btn--light" href={LINKS.salt06}>{c.buySalt}</a>
+        <a class="btn btn--light" href={LINKS.salt06} data-calc-buy>{c.buySalt}</a>
         <a class="btn calc__wa" data-calc-wa href={STORE.whatsapp} target="_blank" rel="noopener">
           <svg width="18" height="18" viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M16.04 3C9.4 3 4 8.36 4 14.96c0 2.3.66 4.45 1.8 6.27L4 29l7.98-1.78a12.1 12.1 0 0 0 4.06.7C22.68 27.92 28 22.56 28 15.96S22.68 3 16.04 3Z"/></svg>
           {c.waCta}
@@ -114,7 +114,7 @@ const fmt = (n: number, d = 0) => new Intl.NumberFormat(lang === 'ru' ? 'ru-RU' 
       </div>
     </form>
   </div>
-  <script type="application/json" id="calc-i18n" set:html={JSON.stringify({ n06: c.n06Note, n2: c.n2Note, g: c.g, wa: c.waText, n06Name: c.n06Short, n2Name: c.n2Short, phone: STORE.whatsapp })} />
+  <script type="application/json" id="calc-i18n" set:html={JSON.stringify({ n06: c.n06Note, n2: c.n2Note, g: c.g, wa: c.waText, n06Name: c.waName06, n2Name: c.waName2, phone: STORE.whatsapp, buy06: c.buySalt, buy2: c.buySalt2, href06: LINKS.salt06, href2: LINKS.salt2 })} />
 </section>
 
 <style>
