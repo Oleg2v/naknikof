@@ -60,7 +60,7 @@ const word = 'Kolbassnik'.split('');
 </footer>
 
 <style>
-  .ft { background: var(--smoke); color: var(--cream-on-dark); padding-block: clamp(56px, 7vw, 96px) 28px; border-block-start: 1px solid rgb(243 235 223 / 0.12); overflow: clip; }
+  .ft { background: var(--smoke); color: var(--cream-on-dark); padding-block: clamp(56px, 7vw, 96px) calc(28px + 72px + env(safe-area-inset-bottom)); border-block-start: 1px solid rgb(243 235 223 / 0.12); overflow: clip; }
   .ft__top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 32px; }
   .ft__tag { font: 400 italic clamp(1.6rem, 1.2rem + 1.4vw, 2.6rem) / 1.1 var(--font-display); max-inline-size: 16ch; color: var(--cream-on-dark); }
   .ft__h { font: 600 var(--fs-eyebrow) / 1.2 var(--font-ui); letter-spacing: var(--track-eyebrow); text-transform: uppercase; color: #f0b49b; margin-block-end: 14px; }

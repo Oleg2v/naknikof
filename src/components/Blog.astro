@@ -95,7 +95,7 @@ const lang = t.lang as 'ru' | 'he';
   }
   .post__excerpt { color: var(--ink-2); font-size: 0.98rem; }
   .post__excerpt--lg { font: 400 italic clamp(1.15rem, 0.95rem + 0.6vw, 1.45rem) / 1.35 var(--font-display); color: var(--ink); }
-  .post__foot { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding-block-start: 14px; border-block-start: 1px solid var(--line); font-size: var(--fs-small); }
+  .post__foot { grid-row: -2 / -1; display: flex; justify-content: space-between; align-items: center; gap: 10px; padding-block-start: 14px; border-block-start: 1px solid var(--line); font-size: var(--fs-small); }
   .post__by { color: var(--ink-2); }
   .post__read { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; }
   .post__ru { font-weight: 400; color: var(--ink-2); }

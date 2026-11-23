@@ -116,6 +116,7 @@
 }
 .ph svg { inline-size: 38%; block-size: auto; opacity: 0.9; }
 .ph__tag {
+  display: none;
   position: absolute;
   inset-block-end: 10px;
   inset-inline-start: 10px;
@@ -129,6 +130,7 @@
 }
 
 /* Scroll reveal hooks (JS adds .is-in; without JS everything is visible) */
+html.kr-on .ph__tag { display: inline-block; }
 .js [data-reveal] { opacity: 0; transform: translateY(28px); }
 .js [data-reveal].is-in { opacity: 1; transform: none; transition: opacity 0.9s var(--ease), transform 1.1s var(--ease); transition-delay: var(--rd, 0ms); }
 @media (prefers-reduced-motion: reduce) {

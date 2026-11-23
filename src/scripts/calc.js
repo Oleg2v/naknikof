@@ -34,9 +34,15 @@ export function initCalc() {
     update();
   }
 
+  const note = $('[data-range-note]');
   function update(source) {
     let kg = parseFloat(String(meat.value).replace(',', '.'));
     if (!Number.isFinite(kg)) kg = 0;
+    const out = kg > MEAT.max || (kg > 0 && kg < MEAT.min);
+    if (note && source !== 'typing') {
+      note.hidden = !out;
+      if (out) note.textContent = (i18n.rangeNote || '').replace('{kg}', nf(1).format(clampKg(kg)));
+    }
     if (source !== 'typing') {
       kg = clampKg(kg);
       meat.value = new Intl.NumberFormat(lang, { maximumFractionDigits: 1 }).format(kg);

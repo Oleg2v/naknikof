@@ -116,16 +116,6 @@ export const CATEGORIES: Category[] = [
 
 export const POPULAR: Product[] = [
   {
-    handle: 'natrit-sol-0-6-500-v-izraile',
-    url: enc('natrit-sol-0-6-500-v-izraile'),
-    title: { ru: 'Нитритная соль 0,6 %', he: 'מלח ניטריט 0.6%' },
-    spec: { ru: '1 кг · NaCl + 0,6 % NaNO₂', he: '1 ק״ג · NaCl + 0.6% NaNO₂' },
-    price: 80,
-    available: true,
-    image: null,
-    icon: 'additives',
-  },
-  {
     handle: 'быстрые-звезды-сплошной-колбасы',
     url: enc('быстрые-звезды-сплошной-колбасы'),
     title: { ru: 'Стартовые культуры ALMI 7', he: 'תרביות מתנע ALMI 7' },
@@ -155,6 +145,16 @@ export const POPULAR: Product[] = [
     available: true,
     image: chipsBox,
     icon: 'smoking',
+  },
+  {
+    handle: 'natrit-sol-0-6-500-v-izraile',
+    url: enc('natrit-sol-0-6-500-v-izraile'),
+    title: { ru: 'Нитритная соль 0,6 %', he: 'מלח ניטריט 0.6%' },
+    spec: { ru: '1 кг · NaCl + 0,6 % NaNO₂', he: '1 ק״ג · NaCl + 0.6% NaNO₂' },
+    price: 80,
+    available: true,
+    image: null,
+    icon: 'additives',
   },
   {
     handle: 'thermopro-tp710-dual-probe',

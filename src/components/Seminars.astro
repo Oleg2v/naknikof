@@ -24,9 +24,11 @@ const items = (data.items as Item[])
 
 const images = import.meta.glob<{ default: ImageMetadata }>('../assets/seminars/*.{jpg,jpeg,png,webp,avif}', { eager: true });
 const img = (name: string | null) => (name ? images[`../assets/seminars/${name}`]?.default : undefined);
+// While the list is a demo, the prefilled message says so (the WhatsApp number is the real shop).
+const demoTag = data.demo ? (lang === 'he' ? '[דמו] ' : '[Демо] ') : '';
 const signup = (s: Item) =>
   (s.signupUrl as string | null) ||
-  waLink(lang === 'he' ? `שלום! אשמח להירשם לסדנה "${s.title.he}"` : `Здравствуйте! Хочу записаться на семинар «${s.title.ru}»`);
+  waLink(demoTag + (lang === 'he' ? `שלום! אשמח להירשם לסדנה "${s.title.he}"` : `Здравствуйте! Хочу записаться на семинар «${s.title.ru}»`));
 ---
 <section class="sem section" id="seminars" data-cid="seminars" aria-labelledby="sem-title">
   <div class="wrap">

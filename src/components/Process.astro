@@ -132,7 +132,7 @@ const stageKeys = ['casing', 'stuffing', 'smoking', 'slicing'] as const;
     margin-block-end: 18px;
   }
   .proc__chTitle { font: 400 italic clamp(1.3rem, 1.05rem + 0.9vw, 1.9rem) / 1.15 var(--font-display); color: var(--stage-accent); margin-block-end: 12px; }
-  .proc__ch:nth-child(3) .proc__plate + .proc__txt { --stage-accent: var(--accent); }
+  :global(html:not(.motion-ok)) .proc__ch:nth-child(3) .proc__txt { --stage-accent: var(--accent); }
   .proc__chText { color: var(--stage-muted); max-inline-size: 44ch; font-size: 1.05rem; }
   .proc__links { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 22px; margin-block-start: 22px; }
   .proc__pick {
@@ -140,7 +140,7 @@ const stageKeys = ['casing', 'stuffing', 'smoking', 'slicing'] as const;
     font-weight: 600;
     padding: 7px 12px;
     border-radius: 999px;
-    border: 1px solid var(--line-strong);
+    border: 1px solid color-mix(in srgb, currentColor 35%, transparent);
     text-decoration: none;
   }
   .proc__pick:hover { border-color: currentColor; }
@@ -161,16 +161,18 @@ const stageKeys = ['casing', 'stuffing', 'smoking', 'slicing'] as const;
     margin-inline: auto;
   }
   :global(.motion-ok) .proc .proc__stage { display: block; grid-column: 1 / span 8; grid-row: 1; align-self: center; }
-  :global(.motion-ok) .proc .proc__chapters { display: block; position: relative; grid-column: 9 / span 4; grid-row: 1; block-size: 70svh; padding: 0; }
-  :global(.motion-ok) .proc .proc__ch { position: absolute; inset: 0; display: flex; align-items: center; padding: 0; opacity: 0; visibility: hidden; }
-  :global(.motion-ok) .proc .proc__ch:first-child { opacity: 1; visibility: visible; }
+  :global(.motion-ok) .proc .proc__chapters { display: block; position: relative; grid-column: 9 / span 4; grid-row: 1; block-size: 70svh; padding: 0; container-type: inline-size; }
+  /* size the huge chapter word from its column, not the viewport, so «Копчение» never clips */
+  :global(.motion-ok) .proc .proc__word { font-size: min(7.6rem, 21cqi); }
+  :global(.motion-ok) .proc .proc__ch { position: absolute; inset: 0; display: flex; align-items: center; padding: 0; opacity: 0; }
+  :global(.motion-ok) .proc .proc__ch:first-child { opacity: 1; }
   :global(.motion-ok) .proc .proc__plate { display: none; }
   :global(.motion-ok) .proc .proc__txt { inline-size: 100%; }
   :global(.motion-ok) .proc .proc__rail {
     display: flex;
     position: absolute;
     inset-inline-end: var(--gutter);
-    inset-block-end: clamp(24px, 4vh, 48px);
+    inset-block-end: calc(16px + 56px + 16px); /* above the WhatsApp button */
     align-items: center;
     gap: 16px;
   }

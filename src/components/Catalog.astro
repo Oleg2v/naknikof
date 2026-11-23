@@ -91,6 +91,16 @@ const lang = t.lang as 'ru' | 'he';
 <script>
   const rail = document.querySelector<HTMLElement>('.pop__rail');
   const rtl = document.documentElement.dir === 'rtl';
+  const [prevBtn, nextBtn] = document.querySelectorAll<HTMLButtonElement>('.pop__btn');
+  const syncBtns = () => {
+    if (!rail || !prevBtn || !nextBtn) return;
+    const x = Math.abs(rail.scrollLeft);
+    prevBtn.disabled = x < 2;
+    nextBtn.disabled = x > rail.scrollWidth - rail.clientWidth - 2;
+  };
+  rail?.addEventListener('scroll', () => requestAnimationFrame(syncBtns), { passive: true });
+  addEventListener('resize', syncBtns, { passive: true });
+  syncBtns();
   document.querySelectorAll<HTMLButtonElement>('.pop__btn').forEach((b) =>
     b.addEventListener('click', () => {
       if (!rail) return;
@@ -170,6 +180,8 @@ const lang = t.lang as 'ru' | 'he';
   .pop__btn:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
   :global([dir='rtl']) .pop__btn svg { transform: scaleX(-1); }
 
+  .pop__btn:disabled { opacity: 0.35; cursor: default; }
+  .pop__btn:disabled:hover { background: transparent; color: inherit; border-color: var(--line-strong); }
   .pop__rail {
     display: grid;
     grid-auto-flow: column;
@@ -178,10 +190,11 @@ const lang = t.lang as 'ru' | 'he';
     overflow-x: auto;
     overscroll-behavior-x: contain;
     scroll-snap-type: x mandatory;
-    scroll-padding-inline: var(--gutter);
     padding-block: 8px 28px;
-    margin-inline: calc(var(--gutter) * -1);
-    padding-inline: var(--gutter);
+    /* bleed to the viewport edge on any width (also beyond the 1520px container) */
+    margin-inline: calc(50% - 50vw);
+    padding-inline: max(var(--gutter), calc(50vw - var(--max-w) / 2 + var(--gutter)));
+    scroll-padding-inline: max(var(--gutter), calc(50vw - var(--max-w) / 2 + var(--gutter)));
     scrollbar-width: thin;
     scrollbar-color: var(--accent) transparent;
   }
@@ -247,7 +260,7 @@ const lang = t.lang as 'ru' | 'he';
     .cat__arr { display: none; }
     .pop__head { grid-template-columns: 1fr auto; }
     .pop__lead { grid-column: 1 / -1; grid-row: 2; }
-    .pop__rail { grid-auto-columns: 72vw; }
+    .pop__rail { grid-auto-columns: min(72vw, 320px); }
   }
   @media (prefers-reduced-motion: reduce) {
     .cat__row, .cat__row::before, .pcard__link, .pcard__media :global(img) { transition: none; }

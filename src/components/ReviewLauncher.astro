@@ -64,12 +64,17 @@ const close = lang === 'he' ? 'יציאה ממצב הערות' : 'Выйти и�
     transition: background 0.2s, color 0.2s, transform 0.2s;
   }
   .review-launcher:hover { transform: translateY(-2px); }
+  /* compact by default so it never covers content; the label slides out on hover/focus */
+  .review-launcher span { display: inline-block; max-inline-size: 0; overflow: hidden; white-space: nowrap; opacity: 0; transition: max-inline-size 0.35s var(--ease), opacity 0.25s; }
+  .review-launcher:hover span, .review-launcher:focus-visible span, .review-launcher.is-on span { max-inline-size: 16em; opacity: 1; }
+  .review-launcher { padding: 0 13px; gap: 0; }
+  .review-launcher:hover, .review-launcher:focus-visible, .review-launcher.is-on { gap: 8px; padding-inline: 14px 16px; }
   .review-launcher.is-on { background: var(--ink); color: var(--paper); }
   .review-launcher.is-loading { opacity: 0.6; }
   .review-launcher:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
   @media (max-width: 640px) {
-    .review-launcher span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-    .review-launcher { padding: 0; width: 44px; justify-content: center; }
+    .review-launcher span, .review-launcher:hover span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    .review-launcher, .review-launcher:hover { padding: 0; width: 44px; justify-content: center; }
   }
   @media (prefers-reduced-motion: reduce) { .review-launcher { transition: none; } }
 </style>

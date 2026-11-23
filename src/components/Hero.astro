@@ -59,16 +59,12 @@ const { t } = Astro.props;
       ))}
     </dl>
   </div>
-  <a class="hero__scroll" href="#seminars" aria-label={t.hero.scroll}>
-    <span aria-hidden="true">{t.hero.scroll}</span>
-    <svg width="12" height="34" viewBox="0 0 12 34" aria-hidden="true"><path d="M6 0v32M1 27l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>
-  </a>
 </section>
 
 <style>
   .hero {
     position: relative;
-    padding-block: clamp(28px, 5vw, 72px) clamp(56px, 7vw, 110px);
+    padding-block: clamp(20px, min(4vw, 5svh), 64px) clamp(56px, 7vw, 110px);
     overflow: clip;
   }
   .hero__inner {
@@ -76,7 +72,7 @@ const { t } = Astro.props;
     display: grid;
     grid-template-columns: repeat(12, minmax(0, 1fr));
     column-gap: clamp(12px, 1.6vw, 24px);
-    row-gap: clamp(20px, 3vw, 40px);
+    row-gap: clamp(16px, min(2.4vw, 3svh), 36px);
   }
   .hero__eyebrow { grid-column: 1 / -1; }
   .hero__title {
@@ -196,27 +192,11 @@ const { t } = Astro.props;
   }
   .hero__statLabel { font-size: var(--fs-small); color: var(--ink-2); max-inline-size: 22ch; }
 
-  .hero__scroll {
-    position: absolute;
-    /* physical offsets: logical insets would resolve against the vertical writing mode */
-    bottom: 18px;
-    right: var(--gutter);
-    display: none;
-    align-items: center;
-    gap: 10px;
-    text-decoration: none;
-    font-size: 0.75rem;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--ink-2);
-    writing-mode: vertical-rl;
-  }
-  :global([dir='rtl']) .hero__scroll { right: auto; left: var(--gutter); }
-  .hero__scroll svg { animation: nudge 2.4s var(--ease-io) infinite; }
-  @keyframes nudge { 50% { transform: translateY(6px); } }
 
   @media (min-width: 1100px) {
-    .hero__scroll { display: inline-flex; }
+    /* lead and CTAs side by side, so the CTAs stay in the first screen on laptops */
+    .hero__foot { grid-column: 1 / span 9; grid-template-columns: minmax(0, 36ch) auto; align-items: end; column-gap: 40px; }
+    .hero__lead { font-size: clamp(1.05rem, 0.9rem + 0.4vw, 1.3rem); }
   }
   /* Wide screens: anchor the slice to the viewport edge, not to the centred 1520px container */
   @media (min-width: 1600px) {
@@ -246,6 +226,6 @@ const { t } = Astro.props;
     .hero__statValue { min-inline-size: 3.4ch; }
   }
   @media (prefers-reduced-motion: reduce) {
-    .hero__lineIn, .hero__slice, .hero__orbit, .hero__foot, .hero__stats, .hero__scroll svg { animation: none; }
+    .hero__lineIn, .hero__slice, .hero__orbit, .hero__foot, .hero__stats { animation: none; }
   }
 </style>

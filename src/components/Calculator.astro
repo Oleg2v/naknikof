@@ -76,6 +76,7 @@ const fmt = (n: number, d = 0) => new Intl.NumberFormat(lang === 'ru' ? 'ru-RU' 
           <button type="button" class="calc__step" data-step="0.5" aria-label={c.more}>+</button>
         </div>
         <input class="calc__range" name="meatRange" type="range" min={MEAT.min} max={MEAT.max} step={MEAT.step} value={MEAT.def} aria-label={c.meat} />
+        <p class="calc__rangeNote" data-range-note aria-live="polite" hidden></p>
         <div class="calc__chips" role="group" aria-label={c.presets}>
           {[1, 2.5, 5, 10].map((v) => <button type="button" class="calc__chip" data-kg={v}>{fmt(v, v % 1 ? 1 : 0)} {c.kg}</button>)}
         </div>
@@ -93,8 +94,8 @@ const fmt = (n: number, d = 0) => new Intl.NumberFormat(lang === 'ru' ? 'ru-RU' 
         <p class="calc__outLabel">{c.result}</p>
         <p class="calc__big"><output data-out-salt>{fmt(g0, 1)}</output><span>{c.g}</span></p>
         <dl class="calc__rows">
-          <div><dt>{c.nitrite}</dt><dd><output data-out-nitrite>{fmt(g0 * def.nitrite * 1000)}</output> {c.mg} <small>(<span data-out-perkg>{fmt(def.def * def.nitrite * 1000)}</span> {c.mg} {c.perKg})</small></dd></div>
-          <div data-nitrate-row hidden><dt>{c.nitrate}</dt><dd><output data-out-nitrate>0</output> {c.mg}</dd></div>
+          <div><dt>{c.nitrite}</dt><dd><output data-out-nitrite>{fmt(g0 * def.nitrite * 1000)}</output>{'\u00A0'}{c.mg} <small class="calc__nw">(<span data-out-perkg>{fmt(def.def * def.nitrite * 1000)}</span>{'\u00A0'}{c.mg} {c.perKg})</small></dd></div>
+          <div data-nitrate-row hidden><dt>{c.nitrate}</dt><dd><output data-out-nitrate>0</output>{'\u00A0'}{c.mg}</dd></div>
         </dl>
         <p class="calc__noSalt">{c.noTableSalt}</p>
       </div>
@@ -114,7 +115,7 @@ const fmt = (n: number, d = 0) => new Intl.NumberFormat(lang === 'ru' ? 'ru-RU' 
       </div>
     </form>
   </div>
-  <script type="application/json" id="calc-i18n" set:html={JSON.stringify({ n06: c.n06Note, n2: c.n2Note, g: c.g, wa: c.waText, n06Name: c.waName06, n2Name: c.waName2, phone: STORE.whatsapp, buy06: c.buySalt, buy2: c.buySalt2, href06: LINKS.salt06, href2: LINKS.salt2 })} />
+  <script type="application/json" id="calc-i18n" set:html={JSON.stringify({ rangeNote: c.rangeNote, n06: c.n06Note, n2: c.n2Note, g: c.g, wa: c.waText, n06Name: c.waName06, n2Name: c.waName2, phone: STORE.whatsapp, buy06: c.buySalt, buy2: c.buySalt2, href06: LINKS.salt06, href2: LINKS.salt2 })} />
 </section>
 
 <style>
@@ -196,6 +197,8 @@ const fmt = (n: number, d = 0) => new Intl.NumberFormat(lang === 'ru' ? 'ru-RU' 
   .calc__num .calc__step:last-child { margin-inline-start: auto; }
 
   .calc__range { inline-size: 100%; margin-block: 14px 8px; accent-color: var(--accent); block-size: 28px; }
+  .calc__rangeNote { margin-block: 0 10px; font-size: 0.88rem; color: var(--accent); font-weight: 500; }
+  .calc__nw { white-space: nowrap; }
   .calc__chips { display: flex; flex-wrap: wrap; gap: 8px; }
   .calc__chip { border: 1px solid var(--line-strong); background: transparent; border-radius: 999px; padding: 8px 14px; min-block-size: 40px; font-weight: 500; }
   .calc__chip:hover, .calc__chip.is-on { background: var(--ink); color: var(--paper); border-color: var(--ink); }

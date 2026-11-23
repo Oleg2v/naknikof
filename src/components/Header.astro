@@ -88,6 +88,9 @@ const nav = [
       btn.querySelector('.sr-only')!.textContent = open ? btn.dataset.close! : btn.dataset.open!;
       panel.hidden = !open;
       document.documentElement.classList.toggle('menu-open', open);
+      // focus stays in the menu: everything behind it is inert while it is open
+      document.querySelectorAll<HTMLElement>('body > :not(header):not(script):not(style), header .topbar').forEach((n) => (n.inert = open));
+      document.querySelectorAll<HTMLElement>('.hdr__inner > :not(.hdr__actions), .hdr__actions > :not(.hdr__burger)').forEach((n) => (n.inert = open));
       const lenis = (window as any).lenis;
       if (lenis) open ? lenis.stop() : lenis.start();
       if (open) panel.querySelector('a')?.focus();
@@ -103,6 +106,12 @@ const nav = [
       }
     });
   }
+  // Language switch keeps the current section (same ids in both languages).
+  document.querySelector<HTMLAnchorElement>('.hdr__lang a')?.addEventListener('click', (e) => {
+    const a = e.currentTarget as HTMLAnchorElement;
+    if (location.hash && /^#[\w-]+$/.test(location.hash)) a.href = a.pathname + location.hash;
+  });
+
   // Compact header after the hero; hide on scroll down, show on scroll up.
   if (hdr) {
     let last = 0;
@@ -339,6 +348,8 @@ const nav = [
   }
   .mnav__n { font: 500 0.8rem/1 var(--font-ui); color: var(--accent); }
   :global(html.menu-open) :global(.wa-fab), :global(html.menu-open) :global(.review-launcher) { visibility: hidden; }
+  :global(html.menu-open) { overflow: hidden; }
+  .mnav { overscroll-behavior: contain; }
   .mnav__ext { display: inline-flex; align-items: center; gap: 6px; }
   :global([dir='rtl']) .mnav__ext :global(.ext) { transform: scaleX(-1); }
   .mnav__foot { display: flex; justify-content: space-between; gap: 16px; font-weight: 600; padding-block-start: 24px; border-block-start: 1px solid var(--line); }

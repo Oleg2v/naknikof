@@ -33,13 +33,13 @@ export function initProcess({ gsap, ScrollTrigger, lenis }) {
   gsap.set(one('.l-cut'), { opacity: 1 });
   gsap.set(q('.l-cut > g:first-child'), { opacity: 0 });
   gsap.set(q('.l-slice'), { opacity: 0, x: -90, rotate: -12, transformOrigin: '50% 50%' });
-  gsap.set(chapters.slice(1), { autoAlpha: 0, y: 30 });
-  gsap.set(chapters[0], { autoAlpha: 1, y: 0 });
+  gsap.set(chapters.slice(1), { opacity: 0, y: 30 });
+  gsap.set(chapters[0], { opacity: 1, y: 0 });
 
   const tl = gsap.timeline({ paused: true, defaults: { ease: 'none' } });
   const text = (i, at) => {
-    if (i > 0) tl.to(chapters[i - 1], { autoAlpha: 0, y: -24, duration: 0.18, ease: 'power2.in' }, at - 0.18);
-    tl.fromTo(chapters[i], { autoAlpha: 0, y: 30 }, { autoAlpha: 1, y: 0, duration: 0.22, ease: 'power2.out' }, at + 0.02);
+    if (i > 0) tl.to(chapters[i - 1], { opacity: 0, y: -24, duration: 0.18, ease: 'power2.in' }, at - 0.18);
+    tl.fromTo(chapters[i], { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.22, ease: 'power2.out' }, at + 0.02);
   };
 
   // ---- ch0: casing unshirrs and draws ----
@@ -58,7 +58,7 @@ export function initProcess({ gsap, ScrollTrigger, lenis }) {
   // ---- ch2: smoking ----
   tl.addLabel('ch2', 2);
   text(2, 2);
-  tl.to(section, { '--stage-bg': c('--smoke'), '--stage-fg': c('--cream-on-dark'), '--stage-muted': c('--muted-on-dark'), '--stage-accent': '#f0b49b', duration: 0.3 }, 1.92)
+  tl.to(section, { '--stage-bg': c('--smoke'), '--stage-fg': c('--cream-on-dark'), '--stage-muted': c('--muted-on-dark'), '--stage-accent': '#f0b49b', '--focus': '#f3ebdf', duration: 0.3 }, 1.92)
     .to(one('.l-board'), { opacity: 0, y: 40, duration: 0.25 }, 1.95)
     .to(one('.l-sausage'), { y: -80, duration: 0.3, ease: 'power2.inOut' }, 2.0)
     .to(one('.l-hook'), { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' }, 2.0)
@@ -71,7 +71,7 @@ export function initProcess({ gsap, ScrollTrigger, lenis }) {
   // ---- ch3: slicing ----
   tl.addLabel('ch3', 3);
   text(3, 3);
-  tl.to(section, { '--stage-bg': c('--paper'), '--stage-fg': c('--ink'), '--stage-muted': c('--ink-2'), '--stage-accent': c('--accent'), duration: 0.3 }, 2.92)
+  tl.to(section, { '--stage-bg': c('--paper'), '--stage-fg': c('--ink'), '--stage-muted': c('--ink-2'), '--stage-accent': c('--accent'), '--focus': c('--accent'), duration: 0.3 }, 2.92)
     .to(one('.l-smoke'), { opacity: 0, duration: 0.15 }, 2.9)
     .to(one('.l-embers'), { opacity: 0, duration: 0.25 }, 2.95)
     .to(one('.l-hook'), { opacity: 0, y: -260, duration: 0.25, ease: 'power2.in' }, 2.95)
@@ -112,6 +112,14 @@ export function initProcess({ gsap, ScrollTrigger, lenis }) {
     },
     onToggle: (self) => svg.style.setProperty('will-change', self.isActive ? 'transform' : 'auto'),
   });
+
+  // Keyboard: focusing a link inside a chapter scrolls the story to that chapter, so focus is never on invisible text.
+  const goTo = (i, smooth) => {
+    const y = st.start + ((st.end - st.start) * (i + 0.12)) / total;
+    if (lenis) lenis.scrollTo(y, { immediate: !smooth, duration: 1.2 });
+    else window.scrollTo({ top: y, behavior: smooth ? 'smooth' : 'auto' });
+  };
+  chapters.forEach((ch, i) => ch.addEventListener('focusin', () => i !== active && goTo(i, false)));
 
   // Rail navigation → scroll to chapter label
   ticks.forEach((a, i) =>
