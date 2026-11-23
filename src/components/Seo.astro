@@ -24,7 +24,9 @@ const ld = [
     '@type': 'Organization',
     '@id': `${STORE.url}#org`,
     name: STORE.name,
+    legalName: 'Naknikof', // trade name from kolbassnik.com/policies/contact-information
     url: STORE.url,
+    sameAs: [STORE.telegram],
     logo: `${site}/icons/logo-512.png`,
     email: STORE.email,
     telephone: STORE.phoneIntl,
@@ -57,7 +59,6 @@ const ld = [
     image: `${site}/icons/logo-512.png`,
     telephone: STORE.phoneIntl,
     email: STORE.email,
-    priceRange: '₪₪',
     currenciesAccepted: 'ILS',
     address: {
       '@type': 'PostalAddress',
@@ -75,7 +76,7 @@ const ld = [
 <link rel="canonical" href={url} />
 <link rel="alternate" hreflang="ru" href={alt.ru} />
 <link rel="alternate" hreflang="he" href={alt.he} />
-<link rel="alternate" hreflang="x-default" href={alt.ru} />
+<link rel="alternate" hreflang="x-default" href={`${site}/`} />
 {noindex && <meta name="robots" content="noindex, follow" />}
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Kolbassnik" />

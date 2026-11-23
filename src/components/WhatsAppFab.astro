@@ -30,6 +30,7 @@ const href = `${STORE.whatsapp}?text=${encodeURIComponent(text)}`;
     transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
   }
   .wa-fab:hover { transform: translateY(-3px) scale(1.04); }
-  .wa-fab:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+  /* floats over light and dark sections: a two-tone ring stays visible on both */
+  .wa-fab:focus-visible { outline: 3px solid var(--paper); outline-offset: 2px; box-shadow: 0 0 0 7px var(--ink); }
   @media (prefers-reduced-motion: reduce) { .wa-fab { transition: none; } }
 </style>

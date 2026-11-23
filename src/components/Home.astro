@@ -38,8 +38,7 @@ const lang = t.lang as 'ru' | 'he';
   <Footer t={t} />
   <WhatsAppFab label={t.a11y.whatsapp} text={lang === 'he' ? 'שלום! יש לי שאלה' : 'Здравствуйте! У меня вопрос'} />
   <ReviewLauncher lang={lang} />
+  <script>
+    import '../scripts/main.js';
+  </script>
 </Base>
-
-<script>
-  import '../scripts/main.js';
-</script>

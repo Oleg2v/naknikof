@@ -158,7 +158,9 @@ const fmt = (n: number, d = 0) => new Intl.NumberFormat(lang === 'ru' ? 'ru-RU' 
   .calc__safety li { padding-inline-start: 16px; position: relative; }
   .calc__safety li::before { content: ''; position: absolute; inset-inline-start: 0; inset-block-start: 0.6em; inline-size: 6px; block-size: 6px; border-radius: 50%; background: var(--ember); }
 
+  /* the tool is a light card on the bordeaux section: the ring goes back to bordeaux */
   .calc__tool {
+    --focus: var(--accent);
     grid-column: 7 / span 6;
     background: var(--paper);
     color: var(--ink);

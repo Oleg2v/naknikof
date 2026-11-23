@@ -2,6 +2,9 @@
 import '../styles/tokens.css';
 import '../styles/base.css';
 import Seo from '../components/Seo.astro';
+import { readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { join } from 'node:path';
 import type { Copy } from '../i18n/ru';
 
 interface Props {
@@ -10,9 +13,15 @@ interface Props {
 const { t } = Astro.props;
 const lang = t.lang as 'ru' | 'he';
 // One subset file per style per language page (scripts/subset-fonts.py). OFL: Bona Nova, Rubik.
-const preload = [`/fonts/bonanova-700-${lang}.woff2`, `/fonts/rubik-${lang}.woff2`];
+// URLs carry a content hash (?v=) because /fonts/* is cached as immutable: a re-subset font must get a new URL.
+const fontUrl = (file: string) => {
+  const name = `${file}-${lang}.woff2`;
+  const v = createHash('sha1').update(readFileSync(join(process.cwd(), 'public/fonts', name))).digest('hex').slice(0, 8);
+  return `/fonts/${name}?v=${v}`;
+};
+const preload = [fontUrl('bonanova-700'), fontUrl('rubik')];
 const face = (family: string, file: string, weight: string, style = 'normal') =>
-  `@font-face{font-family:'${family}';src:url('/fonts/${file}-${lang}.woff2') format('woff2');font-weight:${weight};font-style:${style};font-display:swap}`;
+  `@font-face{font-family:'${family}';src:url('${fontUrl(file)}') format('woff2');font-weight:${weight};font-style:${style};font-display:swap}`;
 const fontCss = [
   face('Rubik', 'rubik', '300 900'),
   face('Bona Nova', 'bonanova-700', '700'),

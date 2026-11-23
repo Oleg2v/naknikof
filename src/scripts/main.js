@@ -47,3 +47,21 @@ if (!reduce && desktop) {
 
 // Calculator works with or without motion.
 if (document.querySelector('[data-calc]')) import('./calc.js').then((m) => m.initCalc());
+
+// Off-screen sections skip rendering (content-visibility) on phones, so their height is an estimate until they
+// render. After an in-page jump, re-align the target once the sections above it have their real height.
+if (!desktop) {
+  document.addEventListener('click', (e) => {
+    const a = e.target instanceof Element && e.target.closest('a[href^="#"]');
+    if (!a || a.hash.length < 2 || e.defaultPrevented) return;
+    const target = document.getElementById(decodeURIComponent(a.hash.slice(1)));
+    if (!target) return;
+    const pad = parseFloat(getComputedStyle(document.documentElement).scrollPaddingBlockStart) || 0;
+    const align = () => {
+      const off = target.getBoundingClientRect().top - pad;
+      if (Math.abs(off) > 8) window.scrollBy(0, off);
+    };
+    setTimeout(align, 150);
+    setTimeout(align, 600);
+  });
+}

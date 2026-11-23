@@ -258,9 +258,12 @@ const lang = t.lang as 'ru' | 'he';
     .cat__icon { display: none; }
     .cat__note { grid-column: 2 / -1; grid-row: 2; font-size: 0.9rem; }
     .cat__arr { display: none; }
-    .pop__head { grid-template-columns: 1fr auto; }
+    .pop__head { grid-template-columns: minmax(0, 1fr) auto; column-gap: 16px; }
     .pop__lead { grid-column: 1 / -1; grid-row: 2; }
     .pop__rail { grid-auto-columns: min(72vw, 320px); }
+  }
+  @media (max-width: 360px) {
+    .pop__btn { inline-size: 44px; block-size: 44px; }
   }
   @media (prefers-reduced-motion: reduce) {
     .cat__row, .cat__row::before, .pcard__link, .pcard__media :global(img) { transition: none; }

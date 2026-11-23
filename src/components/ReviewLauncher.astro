@@ -71,7 +71,7 @@ const close = lang === 'he' ? 'יציאה ממצב הערות' : 'Выйти и�
   .review-launcher:hover, .review-launcher:focus-visible, .review-launcher.is-on { gap: 8px; padding-inline: 14px 16px; }
   .review-launcher.is-on { background: var(--ink); color: var(--paper); }
   .review-launcher.is-loading { opacity: 0.6; }
-  .review-launcher:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .review-launcher:focus-visible { outline: 3px solid var(--paper); outline-offset: 2px; box-shadow: 0 0 0 7px var(--ink); }
   @media (max-width: 640px) {
     .review-launcher span, .review-launcher:hover span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
     .review-launcher, .review-launcher:hover { padding: 0; width: 44px; justify-content: center; }

@@ -24,7 +24,8 @@ export const he: Copy = {
     "logo": "Kolbassnik — לדף הבית",
     "home": "דף הבית",
     "promo": "תנאי משלוח",
-    "langCurrent": "השפה הנוכחית"
+    "langCurrent": "השפה הנוכחית",
+    "pauseTicker": "עצירת החלפת ההודעות"
   },
   "topbar": [
     "משלוח חינם בהזמנה מ־370 ₪",

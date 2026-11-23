@@ -23,6 +23,9 @@ const nav = [
   <div class="topbar__track" aria-live="off">
     {t.topbar.map((line, i) => <p class="topbar__item" data-i={i}>{line}</p>)}
   </div>
+  <button class="topbar__pause" type="button" aria-pressed="false" aria-label={t.a11y.pauseTicker} hidden>
+    <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path class="i-pause" d="M3 2h2v8H3zM7 2h2v8H7z" fill="currentColor"/><path class="i-play" d="M3.5 2l6 4-6 4z" fill="currentColor"/></svg>
+  </button>
 </aside>
 
 <header class="hdr" data-cid="header">
@@ -131,21 +134,31 @@ const nav = [
     }, { passive: true });
     hdr.addEventListener('focusin', () => hdr.classList.remove('is-hidden'));
   }
-  // Rotating topbar messages: pauses on hover/focus and while off-screen (WCAG 2.2.2); static under reduced motion.
+  // Rotating topbar messages (WCAG 2.2.2): a pause button for touch and keyboard, plus pause on hover/focus
+  // and while off-screen; static under reduced motion.
   const bar = document.querySelector<HTMLElement>('.topbar');
   const items = document.querySelectorAll<HTMLElement>('.topbar__item');
+  const pauseBtn = document.querySelector<HTMLButtonElement>('.topbar__pause');
   if (bar && items.length > 1 && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
     let i = 0;
     let paused = false;
+    let stopped = false;
     let visible = true;
     items[0].classList.add('is-on');
     bar.addEventListener('pointerenter', () => (paused = true));
     bar.addEventListener('pointerleave', () => (paused = false));
     bar.addEventListener('focusin', () => (paused = true));
     bar.addEventListener('focusout', () => (paused = false));
+    if (pauseBtn) {
+      pauseBtn.hidden = false;
+      pauseBtn.addEventListener('click', () => {
+        stopped = !stopped;
+        pauseBtn.setAttribute('aria-pressed', String(stopped));
+      });
+    }
     new IntersectionObserver(([e]) => (visible = e.isIntersecting)).observe(bar);
     setInterval(() => {
-      if (paused || !visible || document.hidden) return;
+      if (stopped || paused || !visible || document.hidden) return;
       items[i].classList.remove('is-on');
       i = (i + 1) % items.length;
       items[i].classList.add('is-on');
@@ -171,7 +184,7 @@ const nav = [
     inset: 0;
     display: grid;
     place-items: center;
-    padding-inline: var(--gutter);
+    padding-inline: var(--gutter) calc(var(--gutter) + 22px); /* room for the pause button */
     text-align: center;
     white-space: nowrap;
     overflow: hidden;
@@ -183,6 +196,26 @@ const nav = [
   .topbar__item.is-on { opacity: 1; transform: none; }
   :global(.no-js) .topbar__item:first-child { opacity: 1; transform: none; }
   .topbar__item.is-static:not(:first-child) { display: none; }
+  .topbar__pause {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-end: max(4px, calc(var(--gutter) - 14px));
+    margin-block: auto;
+    inline-size: 28px;
+    block-size: 28px;
+    display: grid;
+    place-items: center;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: inherit;
+    opacity: 0.75;
+    cursor: pointer;
+  }
+  .topbar__pause:hover { opacity: 1; background: rgb(255 255 255 / 0.12); }
+  .topbar__pause:focus-visible { opacity: 1; outline: 2px solid var(--paper); outline-offset: -2px; }
+  .topbar__pause .i-play, .topbar__pause[aria-pressed='true'] .i-pause { display: none; }
+  .topbar__pause[aria-pressed='true'] .i-play { display: inline; }
 
   .hdr {
     position: sticky;
@@ -358,6 +391,7 @@ const nav = [
   @media (max-width: 1100px) {
     .hdr__nav, .hdr__cta { display: none; }
     .hdr__burger { display: grid; }
+    .hdr__nav + .hdr__actions { margin-inline-start: auto; } /* the hidden nav no longer centres the row */
   }
   @media (max-width: 520px) {
     .hdr__inner { block-size: 64px; }
@@ -366,6 +400,18 @@ const nav = [
     .hdr__badge :global(img) { inline-size: 38px; block-size: 38px; }
     .hdr__icon { display: none; }
     .topbar { font-size: 0.8rem; block-size: 32px; }
+  }
+  /* 320 px phones (and 400 % zoom): everything still fits on one line without sideways scrolling */
+  @media (max-width: 360px) {
+    .topbar { font-size: 0.74rem; letter-spacing: 0; }
+    .hdr__inner { gap: 8px; }
+    .hdr__logo { gap: 6px; }
+    .hdr__badge { inline-size: 42px; block-size: 42px; }
+    .hdr__badge :global(img) { inline-size: 34px; block-size: 34px; }
+    .hdr__word { font-size: 1.08rem; }
+    .hdr__actions { gap: 2px; }
+    .hdr__lang { padding-inline: 2px; gap: 2px; }
+    .hdr__lang a { min-inline-size: 28px; }
   }
   @media (prefers-reduced-motion: reduce) {
     .hdr__ring { animation: none; }
