@@ -1,0 +1,92 @@
+---
+/**
+ * <head> SEO block: title/description, canonical, hreflang, Open Graph, JSON-LD
+ * (Organization, WebSite, LocalBusiness/Store). Facts come from src/data/store.ts (kolbassnik.com).
+ */
+import { STORE } from '../data/store';
+
+interface Props {
+  lang: 'ru' | 'he';
+  title: string;
+  description: string;
+  ogImage: string;
+  ogAlt: string;
+  noindex?: boolean;
+}
+const { lang, title, description, ogImage, ogAlt, noindex = false } = Astro.props;
+const site = Astro.site!.toString().replace(/\/$/, '');
+const url = `${site}/${lang}/`;
+const alt = { ru: `${site}/ru/`, he: `${site}/he/` };
+
+const ld = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    '@id': `${STORE.url}#org`,
+    name: STORE.name,
+    url: STORE.url,
+    logo: `${site}/icons/logo-512.png`,
+    email: STORE.email,
+    telephone: STORE.phoneIntl,
+    founder: { '@type': 'Person', name: lang === 'he' ? STORE.owner.he : STORE.owner.ru },
+    contactPoint: [
+      {
+        '@type': 'ContactPoint',
+        telephone: STORE.phoneIntl,
+        contactType: 'customer support',
+        availableLanguage: ['ru', 'he'],
+        areaServed: 'IL',
+      },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    '@id': `${site}/#website`,
+    name: STORE.name,
+    url: `${site}/`,
+    inLanguage: lang === 'he' ? 'he-IL' : 'ru-IL',
+    publisher: { '@id': `${STORE.url}#org` },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Store',
+    '@id': `${STORE.url}#store`,
+    name: STORE.name,
+    url: STORE.url,
+    image: `${site}/icons/logo-512.png`,
+    telephone: STORE.phoneIntl,
+    email: STORE.email,
+    priceRange: '₪₪',
+    currenciesAccepted: 'ILS',
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: lang === 'he' ? STORE.address.street.he : STORE.address.street.en,
+      addressLocality: lang === 'he' ? STORE.address.city.he : STORE.address.city.en,
+      addressCountry: 'IL',
+    },
+    areaServed: { '@type': 'Country', name: 'Israel' },
+    parentOrganization: { '@id': `${STORE.url}#org` },
+  },
+];
+---
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={url} />
+<link rel="alternate" hreflang="ru" href={alt.ru} />
+<link rel="alternate" hreflang="he" href={alt.he} />
+<link rel="alternate" hreflang="x-default" href={alt.ru} />
+{noindex && <meta name="robots" content="noindex, follow" />}
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Kolbassnik" />
+<meta property="og:locale" content={lang === 'he' ? 'he_IL' : 'ru_RU'} />
+<meta property="og:locale:alternate" content={lang === 'he' ? 'ru_RU' : 'he_IL'} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={url} />
+<meta property="og:image" content={`${site}${ogImage}`} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={ogAlt} />
+<meta name="twitter:card" content="summary_large_image" />
+<script type="application/ld+json" set:html={JSON.stringify(ld)} />

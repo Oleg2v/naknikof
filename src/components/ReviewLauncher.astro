@@ -1,0 +1,75 @@
+---
+/**
+ * Tiny launcher for review comments. Zero network until clicked (or ?comments=1 in the URL):
+ * the overlay module is a separate chunk fetched on demand.
+ */
+interface Props {
+  lang: 'ru' | 'he';
+}
+const { lang } = Astro.props;
+const label = lang === 'he' ? 'להוספת הערה' : 'Комментировать';
+const close = lang === 'he' ? 'יציאה ממצב הערות' : 'Выйти из режима комментариев';
+---
+<button class="review-launcher" type="button" data-kr-ui data-label-on={close} data-label-off={label} aria-pressed="false">
+  <svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><path d="M3 4.5A2.5 2.5 0 015.5 2h9A2.5 2.5 0 0117 4.5v7a2.5 2.5 0 01-2.5 2.5H9l-4 3.5V14h0a2 2 0 01-2-2V4.5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7 7h6M7 10h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+  <span>{label}</span>
+</button>
+
+<script>
+  const btn = document.querySelector<HTMLButtonElement>('.review-launcher');
+  if (btn) {
+    const span = btn.querySelector('span')!;
+    const load = () => import('../scripts/review/overlay.js');
+    const sync = (on: boolean) => {
+      btn.setAttribute('aria-pressed', String(on));
+      btn.classList.toggle('is-on', on);
+      span.textContent = on ? btn.dataset.labelOn! : btn.dataset.labelOff!;
+    };
+    window.addEventListener('review:mode', (e) => sync((e as CustomEvent).detail.on));
+    btn.addEventListener('click', async () => {
+      btn.classList.add('is-loading');
+      const m = await load();
+      btn.classList.remove('is-loading');
+      await m.toggleReview();
+    });
+    // Warm the chunk on intent, not on load.
+    btn.addEventListener('pointerenter', () => load(), { once: true });
+    const q = new URLSearchParams(location.search);
+    if (q.has('comments') || /^#comment-\d+$/.test(location.hash)) {
+      load().then((m) => m.toggleReview(true));
+    }
+  }
+</script>
+
+<style>
+  .review-launcher {
+    position: fixed;
+    z-index: 60;
+    inset-block-end: max(16px, env(safe-area-inset-bottom));
+    inset-inline-start: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 0 16px 0 14px;
+    border: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--paper) 88%, transparent);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    color: var(--ink);
+    font: 600 14px/1 var(--font-ui);
+    cursor: pointer;
+    box-shadow: 0 6px 24px rgb(0 0 0 / 0.12);
+    transition: background 0.2s, color 0.2s, transform 0.2s;
+  }
+  .review-launcher:hover { transform: translateY(-2px); }
+  .review-launcher.is-on { background: var(--ink); color: var(--paper); }
+  .review-launcher.is-loading { opacity: 0.6; }
+  .review-launcher:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  @media (max-width: 640px) {
+    .review-launcher span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    .review-launcher { padding: 0; width: 44px; justify-content: center; }
+  }
+  @media (prefers-reduced-motion: reduce) { .review-launcher { transition: none; } }
+</style>
