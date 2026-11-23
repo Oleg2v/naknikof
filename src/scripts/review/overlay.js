@@ -99,7 +99,8 @@ html.kr-on .review-launcher { display: none !important; }
 html.kr-on .kr-ui, html.kr-on .kr-ui * { cursor: auto !important; }
 html.kr-on .kr-ui button, html.kr-on .kr-ui .kr-pin { cursor: pointer !important; }
 html.kr-on .kr-ui textarea, html.kr-on .kr-ui input { cursor: text !important; }
-.kr-layer { position: absolute; inset-block-start: 0; left: 0; width: 0; height: 0; z-index: 2147483000; }
+.kr-layer { position: absolute; top: 0; left: 0; width: 100%; height: 0; overflow: hidden; pointer-events: none; z-index: 2147483000; }
+.kr-layer .kr-pin { pointer-events: auto; }
 .kr-pin { position: absolute; width: 30px; height: 30px; display: grid; place-items: center; border: 2px solid #fff;
   background: #8c1c2c; color: #fff; font-weight: 700; font-size: 13px; line-height: 1; border-radius: 50% 50% 50% 0;
   transform: translate(0, -100%); box-shadow: 0 6px 18px rgba(30,10,10,.35); transition: transform .15s ease, background .15s; padding: 0; }
@@ -474,6 +475,15 @@ class Review {
     });
   }
 
+  clipAncestor(el) {
+    // nearest scroll/clip container (e.g. the product rail) — pins outside its visible box are hidden
+    for (let a = el.parentElement; a && a !== document.body && a !== document.documentElement; a = a.parentElement) {
+      const cs = getComputedStyle(a);
+      if (cs.overflowX !== 'visible' || cs.overflowY !== 'visible') return a;
+    }
+    return null;
+  }
+
   locate(th) {
     let el = null;
     try {
@@ -486,7 +496,17 @@ class Review {
       const r = el.getBoundingClientRect();
       if (r.width || r.height) {
         const x = mirror ? 1 - th.x : th.x;
-        return { x: r.left + scrollX + x * r.width, y: r.top + scrollY + th.y * r.height, lost: false, el };
+        const vx = r.left + x * r.width;
+        const vy = r.top + th.y * r.height;
+        if (th._clipEl === undefined || th._clipFor !== el) {
+          th._clipEl = this.clipAncestor(el);
+          th._clipFor = el;
+        }
+        if (th._clipEl) {
+          const c = th._clipEl.getBoundingClientRect();
+          if (vx < c.left - 2 || vx > c.right + 2 || vy < c.top - 2 || vy > c.bottom + 2) return { hidden: true };
+        }
+        return { x: vx + scrollX, y: vy + scrollY, lost: false, el };
       }
     }
     if (th.page_y != null) {
@@ -534,10 +554,11 @@ class Review {
   }
 
   position() {
+    this.layer.style.height = `${document.documentElement.scrollHeight}px`;
     for (const th of [...this.threads, this.draft].filter(Boolean)) {
       if (!th._pin || !th._pin.isConnected) continue;
       const p = this.locate(th);
-      if (!p) {
+      if (!p || p.hidden) {
         th._pin.style.display = 'none';
         continue;
       }
@@ -604,7 +625,7 @@ class Review {
           if (!body) return ta.focus();
           sendBtn.disabled = true;
           try {
-            const { _pin, ...payload } = draft;
+            const payload = Object.fromEntries(Object.entries(draft).filter(([k]) => !k.startsWith('_')));
             const d = await this.send('POST', '', { ...payload, body });
             this.threads.push(d.thread);
             this.draft = null;

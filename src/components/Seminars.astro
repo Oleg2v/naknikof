@@ -165,7 +165,7 @@ const signup = (s: Item) =>
   @media (max-width: 900px) {
     .sem__card { grid-template-columns: 1fr; align-items: start; gap: 18px; padding-inline: 0; }
     .sem__date { grid-template-columns: auto auto; justify-content: start; }
-    .sem__aside { justify-items: start; grid-template-columns: auto auto; align-items: center; justify-content: space-between; }
+    .sem__aside { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
     .sem__card::before { display: none; }
     .sem__media { display: none; }
   }
