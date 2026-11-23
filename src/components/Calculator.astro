@@ -2,6 +2,15 @@
 import { SALTS, MEAT } from '../lib/nitrite';
 import { LINKS } from '../data/catalog';
 import { STORE } from '../data/store';
+import SalamiUse from './art/SalamiUse.astro';
+
+const B = 'https://kolbassnik.com/blogs/%D0%BA%D0%BE%D0%BB%D0%B1%D0%B0%D1%81%D0%BD%D0%B8%D0%BA/';
+const RECIPES = [
+  B + '%D1%80%D0%B5%D1%86%D0%B5%D0%BF%D1%82%D1%8B-%D1%81-%D0%BD%D0%B8%D1%82%D1%80%D0%B8%D1%82%D0%BD%D0%BE%D0%B9-%D1%81%D0%BE%D0%BB%D1%8C%D1%8E-%D1%88%D0%B8%D0%BD%D0%BA%D0%B0-%D0%B2%D0%B5%D1%82%D1%87%D0%B8%D0%BD%D0%B0',
+  B + '%D0%BA%D0%B0%D0%B1%D0%B0%D0%BD%D0%BE%D1%81%D1%8B',
+  B + '%D0%BA%D1%83%D1%80%D0%B8%D0%BD%D1%8B%D0%B9-%D1%80%D1%83%D0%BB%D0%B5%D1%82-%D0%B8%D0%B7-%D0%B1%D0%B5%D0%B4%D1%80%D0%B0-%D1%80%D0%B5%D1%86%D0%B5%D0%BF%D1%82-%D1%81-%D0%BD%D0%B8%D1%82%D1%80%D0%B8%D1%82%D0%BD%D0%BE%D0%B9-%D1%81%D0%BE%D0%BB%D1%8C%D1%8E-0-6-%D0%B4%D1%83%D1%85%D0%BE%D0%B2%D0%BA%D0%B0-%D1%81%D1%83-%D0%B2%D0%B8%D0%B4',
+  LINKS.salt2,
+];
 import type { Copy } from '../i18n/ru';
 
 interface Props {
@@ -27,6 +36,15 @@ const fmt = (n: number, d = 0) => new Intl.NumberFormat(lang === 'ru' ? 'ru-RU' 
         <ul role="list" class="calc__src">
           {c.sources.map((s) => <li>{s}</li>)}
         </ul>
+        <p class="calc__recipes">
+          {c.recipes}:{' '}
+          {c.recipeLinks.map((label, i) => (
+            <>
+              <a href={RECIPES[i]} hreflang="ru">{label}</a>
+              {i < c.recipeLinks.length - 1 && <span aria-hidden="true"> · </span>}
+            </>
+          ))}
+        </p>
       </details>
       <div class="calc__safety" role="note" aria-labelledby="calc-safety">
         <p class="calc__safetyTitle" id="calc-safety">
@@ -35,6 +53,10 @@ const fmt = (n: number, d = 0) => new Intl.NumberFormat(lang === 'ru' ? 'ru-RU' 
         </p>
         <ul role="list">{c.safety.map((s) => <li>{s}</li>)}</ul>
       </div>
+      <figure class="calc__cure" data-reveal>
+        <SalamiUse seed={31} class="calc__slice" />
+        <figcaption>{c.cureCaption}</figcaption>
+      </figure>
     </div>
 
     <form class="calc__tool" data-calc data-lang={lang} aria-label={c.title} onsubmit="return false">
@@ -115,6 +137,20 @@ const fmt = (n: number, d = 0) => new Intl.NumberFormat(lang === 'ru' ? 'ru-RU' 
   .calc__more p { margin-block: 12px 10px; color: rgb(243 235 223 / 0.85); font-size: 0.95rem; }
   .calc__src { display: grid; gap: 6px; font-size: 0.85rem; color: rgb(243 235 223 / 0.75); }
   .calc__src li::before { content: '— '; }
+  .calc__recipes { margin-block-start: 10px; font-size: 0.85rem; color: rgb(243 235 223 / 0.85); }
+  .calc__recipes a { color: var(--paper); font-weight: 600; }
+  .calc__cure { margin: 8px 0 0; display: flex; align-items: center; gap: 18px; }
+  .calc__cure :global(.calc__slice) {
+    inline-size: 96px;
+    block-size: 96px;
+    flex: none;
+    filter: grayscale(0.85) brightness(1.25) sepia(0.2);
+    transform: rotate(-30deg);
+    transition: filter 2.2s var(--ease) 0.4s, transform 2.2s var(--ease) 0.4s;
+  }
+  .calc__cure.is-in :global(.calc__slice) { filter: none; transform: none; }
+  .calc__cure figcaption { font: 400 italic 1.15rem/1.35 var(--font-display); color: rgb(243 235 223 / 0.92); max-inline-size: 30ch; }
+  @media (prefers-reduced-motion: reduce) { .calc__cure :global(.calc__slice) { filter: none; transform: none; } }
   .calc__safety { background: rgb(0 0 0 / 0.18); border-radius: var(--radius); padding: 18px 20px; }
   .calc__safetyTitle { display: flex; align-items: center; gap: 8px; font-weight: 700; margin-block-end: 10px; color: #ffd9c7; }
   .calc__safety ul { display: grid; gap: 8px; font-size: 0.92rem; color: rgb(243 235 223 / 0.88); }

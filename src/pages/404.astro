@@ -1,0 +1,39 @@
+---
+import '../styles/tokens.css';
+import '../styles/base.css';
+import '../styles/ui.css';
+import SalamiSlice from '../components/art/SalamiSlice.astro';
+---
+<!doctype html>
+<html lang="ru" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Страница не найдена — Kolbassnik</title>
+    <link rel="icon" href="/icons/icon-32.png" sizes="32x32" type="image/png" />
+    <style is:inline>@font-face{font-family:'Bona Nova';src:url('/fonts/bonanova-700-ru.woff2') format('woff2');font-weight:700;font-display:swap}@font-face{font-family:'Rubik';src:url('/fonts/rubik-ru.woff2') format('woff2');font-weight:300 900;font-display:swap}</style>
+  </head>
+  <body>
+    <main class="nf wrap">
+      <SalamiSlice seed={23} specks={120} pepper={18} class="nf__slice" />
+      <h1 class="nf__title">404. Колбаска сбежала.</h1>
+      <p class="nf__he" lang="he" dir="rtl">404. הנקניקייה ברחה.</p>
+      <p class="nf__text">Такой страницы нет. Вернитесь на главную или загляните в магазин.</p>
+      <p class="nf__links">
+        <a class="btn btn--solid" href="/ru/">На главную</a>
+        <a class="btn btn--ghost" href="/he/" lang="he">לעמוד הבית</a>
+        <a class="btn btn--ghost" href="https://kolbassnik.com/collections/all">kolbassnik.com</a>
+      </p>
+    </main>
+    <style>
+      .nf { min-block-size: 100svh; display: grid; place-content: center; justify-items: center; text-align: center; gap: 18px; padding-block: 40px; }
+      .nf :global(.nf__slice) { inline-size: min(46vw, 260px); animation: nfspin 30s linear infinite; }
+      @keyframes nfspin { to { transform: rotate(360deg); } }
+      .nf__title { font: 700 clamp(2.4rem, 1.4rem + 4vw, 5rem) / 1 var(--font-display); color: var(--accent); }
+      .nf__he { font: 700 clamp(1.4rem, 1rem + 1.6vw, 2.2rem) / 1.1 var(--font-display); color: var(--ink-2); }
+      .nf__text { color: var(--ink-2); max-inline-size: 40ch; }
+      .nf__links { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+    </style>
+  </body>
+</html>
