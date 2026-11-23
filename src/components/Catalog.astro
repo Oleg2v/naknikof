@@ -67,8 +67,7 @@ const lang = t.lang as 'ru' | 'he';
                 <h4 class="pcard__title">{p.title[lang]}</h4>
                 <p class="pcard__spec">{p.spec[lang]}</p>
                 <p class="pcard__price">
-                  {p.from && <span class="pcard__from">{t.catalog.from}</span>}
-                  <span>{formatPrice(p.price, lang)}</span>
+                  <span class="pcard__now">{p.from && <span class="pcard__from">{t.catalog.from}{lang === 'he' ? '' : '\u00A0'}</span>}{formatPrice(p.price, lang)}</span>
                   {p.compareAt && <s class="pcard__old"><span class="sr-only">{lang === 'he' ? 'במקום' : 'вместо'} </span>{formatPrice(p.compareAt, lang)}</s>}
                 </p>
               </div>
@@ -226,6 +225,7 @@ const lang = t.lang as 'ru' | 'he';
   .pcard__spec { font-size: var(--fs-small); color: var(--ink-2); }
   .pcard__price { display: flex; align-items: baseline; gap: 8px; margin-block-start: 6px; font: 700 1.35rem/1 var(--font-ui); color: var(--accent); }
   .pcard__from { font: 500 0.85rem/1 var(--font-ui); color: var(--ink-2); }
+  .pcard__now { white-space: nowrap; }
   .pcard__old { font: 500 0.95rem/1 var(--font-ui); color: var(--ink-2); }
   .pcard__buy {
     display: flex;
