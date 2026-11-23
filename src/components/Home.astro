@@ -12,6 +12,7 @@ import Contacts from './Contacts.astro';
 import Footer from './Footer.astro';
 import WhatsAppFab from './WhatsAppFab.astro';
 import ReviewLauncher from './ReviewLauncher.astro';
+import SalamiSprite from './art/SalamiSprite.astro';
 import '../styles/ui.css';
 import type { Copy } from '../i18n/ru';
 
@@ -22,6 +23,7 @@ const { t } = Astro.props;
 const lang = t.lang as 'ru' | 'he';
 ---
 <Base t={t}>
+  <SalamiSprite />
   <Header t={t} />
   <main id="main">
     <Hero t={t} />

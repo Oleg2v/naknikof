@@ -82,6 +82,7 @@ const stageKeys = ['casing', 'stuffing', 'smoking', 'slicing'] as const;
     --stage-bg: var(--paper);
     --stage-fg: var(--ink);
     --stage-muted: var(--ink-2);
+    --stage-accent: var(--accent);
     position: relative;
     background: var(--stage-bg);
     color: var(--stage-fg);
@@ -125,14 +126,15 @@ const stageKeys = ['casing', 'stuffing', 'smoking', 'slicing'] as const;
   .proc__ch:nth-child(even) .proc__plate { grid-column: 6 / span 7; grid-row: 1; }
   .proc__ch:nth-child(even) .proc__txt { grid-column: 1 / span 5; grid-row: 1; }
 
-  .proc__num { font: 500 0.9rem/1 var(--font-ui); letter-spacing: 0.14em; color: var(--accent); margin-block-end: 10px; }
+  .proc__num { font: 500 0.9rem/1 var(--font-ui); letter-spacing: 0.14em; color: var(--stage-accent); margin-block-end: 10px; }
   :global([lang='he']) .proc__num { font: 700 1.6rem/1 var(--font-display); letter-spacing: 0; }
   .proc__word {
     font: 700 clamp(3rem, 1.6rem + 5.4vw, 7.6rem) / 0.9 var(--font-display);
     letter-spacing: var(--track-display);
     margin-block-end: 18px;
   }
-  .proc__chTitle { font: 400 italic clamp(1.3rem, 1.05rem + 0.9vw, 1.9rem) / 1.15 var(--font-display); color: var(--accent); margin-block-end: 12px; }
+  .proc__chTitle { font: 400 italic clamp(1.3rem, 1.05rem + 0.9vw, 1.9rem) / 1.15 var(--font-display); color: var(--stage-accent); margin-block-end: 12px; }
+  .proc__ch:nth-child(3) .proc__plate + .proc__txt { --stage-accent: var(--accent); }
   .proc__chText { color: var(--stage-muted); max-inline-size: 44ch; font-size: 1.05rem; }
   .proc__links { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 22px; margin-block-start: 22px; }
   .proc__pick {

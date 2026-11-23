@@ -1,0 +1,8 @@
+---
+/** Page-level SVG sprite: salami cross-sections defined ONCE and reused with <use> (keeps the DOM small). */
+import SalamiSlice from './SalamiSlice.astro';
+export const SALAMI_SEEDS = [5, 6, 10, 14, 18, 31, 38, 45];
+---
+<svg class="sprite" width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute;inline-size:0;block-size:0;overflow:hidden">
+  {SALAMI_SEEDS.map((seed) => <SalamiSlice seed={seed} specks={seed > 20 ? 64 : 44} pepper={seed > 20 ? 12 : 8} symbol />)}
+</svg>

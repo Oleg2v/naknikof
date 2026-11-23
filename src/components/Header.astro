@@ -27,7 +27,7 @@ const nav = [
 
 <header class="hdr" data-cid="header">
   <div class="hdr__inner wrap">
-    <a class="hdr__logo" href={`/${lang}/`} aria-label={t.a11y.logo} data-cid="logo">
+    <a class="hdr__logo" href={`/${lang}/`} data-cid="logo">
       <span class="hdr__badge">
         <Picture src={logo} formats={['avif', 'webp']} widths={[64, 128]} sizes="64px" alt="" loading="eager" fetchpriority="low" />
         <svg class="hdr__ring" viewBox="0 0 120 120" aria-hidden="true">
@@ -35,7 +35,7 @@ const nav = [
           <text><textPath href={`#ring-${lang}`}>KOLBASSNIK · КОЛБАСНИК · קולבסניק · </textPath></text>
         </svg>
       </span>
-      <span class="hdr__word">Kolbassnik</span>
+      <span class="hdr__word">Kolbassnik<span class="sr-only"> — {t.a11y.home}</span></span>
     </a>
 
     <nav class="hdr__nav" aria-label={t.a11y.mainNav}>
@@ -45,11 +45,11 @@ const nav = [
     </nav>
 
     <div class="hdr__actions">
-      <a class="hdr__lang" href={`/${other}/`} hreflang={other} lang={other} aria-label={`${t.a11y.langSwitch}: ${other === 'he' ? 'עברית' : 'Русский'}`}>
-        <span aria-hidden="true" class={lang === 'ru' ? 'is-cur' : ''}>RU</span>
+      <div class="hdr__lang">
+        <span class="is-cur" lang={lang}><span class="sr-only">{t.a11y.langCurrent}: </span>{lang === 'ru' ? 'RU' : 'עב'}</span>
         <span aria-hidden="true" class="hdr__sep">/</span>
-        <span aria-hidden="true" class={lang === 'he' ? 'is-cur' : ''}>עב</span>
-      </a>
+        <a href={`/${other}/`} hreflang={other} lang={other}>{other === 'he' ? 'עב' : 'RU'}<span class="sr-only"> — {other === 'he' ? 'עברית' : 'русский'}</span></a>
+      </div>
       <a class="hdr__icon" href={STORE.links.cart} aria-label={t.a11y.cart}>
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7h14l-1.2 11.2a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8z"/><path d="M9 10V6a3 3 0 0 1 6 0v4"/></svg>
       </a>
@@ -261,6 +261,8 @@ const nav = [
     color: var(--ink-2);
   }
   .hdr__lang .is-cur { color: var(--accent); }
+  .hdr__lang a { text-decoration: none; display: inline-grid; place-items: center; min-block-size: 44px; min-inline-size: 32px; }
+  .hdr__lang a:hover { color: var(--ink); text-decoration: underline; }
   .hdr__sep { opacity: 0.4; }
   .hdr__icon {
     display: grid;

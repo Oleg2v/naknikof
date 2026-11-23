@@ -60,7 +60,7 @@ export function initProcess({ gsap, ScrollTrigger, lenis }) {
   // ---- ch2: smoking ----
   tl.addLabel('ch2', 2);
   text(2, 2);
-  tl.to(section, { '--stage-bg': c('--smoke'), '--stage-fg': c('--cream-on-dark'), '--stage-muted': c('--muted-on-dark'), duration: 0.3 }, 1.92)
+  tl.to(section, { '--stage-bg': c('--smoke'), '--stage-fg': c('--cream-on-dark'), '--stage-muted': c('--muted-on-dark'), '--stage-accent': '#f0b49b', duration: 0.3 }, 1.92)
     .to(one('.l-board'), { opacity: 0, y: 40, duration: 0.25 }, 1.95)
     .to(one('.l-sausage'), { y: -80, duration: 0.3, ease: 'power2.inOut' }, 2.0)
     .to(one('.l-hook'), { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' }, 2.0)
@@ -73,7 +73,7 @@ export function initProcess({ gsap, ScrollTrigger, lenis }) {
   // ---- ch3: slicing ----
   tl.addLabel('ch3', 3);
   text(3, 3);
-  tl.to(section, { '--stage-bg': c('--paper'), '--stage-fg': c('--ink'), '--stage-muted': c('--ink-2'), duration: 0.3 }, 2.92)
+  tl.to(section, { '--stage-bg': c('--paper'), '--stage-fg': c('--ink'), '--stage-muted': c('--ink-2'), '--stage-accent': c('--accent'), duration: 0.3 }, 2.92)
     .to(one('.l-smoke'), { opacity: 0, duration: 0.15 }, 2.9)
     .to(one('.l-embers'), { opacity: 0, duration: 0.25 }, 2.95)
     .to(one('.l-hook'), { opacity: 0, y: -260, duration: 0.25, ease: 'power2.in' }, 2.95)

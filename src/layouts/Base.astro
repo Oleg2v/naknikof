@@ -1,5 +1,4 @@
 ---
-import '../styles/fonts.css';
 import '../styles/tokens.css';
 import '../styles/base.css';
 import Seo from '../components/Seo.astro';
@@ -10,10 +9,19 @@ interface Props {
 }
 const { t } = Astro.props;
 const lang = t.lang as 'ru' | 'he';
-const preload =
-  lang === 'he'
-    ? ['/fonts/bonanova-700-hebrew.woff2', '/fonts/rubik-hebrew.woff2']
-    : ['/fonts/bonanova-700-cyrillic.woff2', '/fonts/rubik-cyrillic.woff2'];
+// One subset file per style per language page (scripts/subset-fonts.py). OFL: Bona Nova, Rubik.
+const preload = [`/fonts/bonanova-700-${lang}.woff2`, `/fonts/rubik-${lang}.woff2`];
+const face = (family: string, file: string, weight: string, style = 'normal') =>
+  `@font-face{font-family:'${family}';src:url('/fonts/${file}-${lang}.woff2') format('woff2');font-weight:${weight};font-style:${style};font-display:swap}`;
+const fontCss = [
+  face('Rubik', 'rubik', '300 900'),
+  face('Bona Nova', 'bonanova-700', '700'),
+  face('Bona Nova', 'bonanova-400', '400'),
+  face('Bona Nova', 'bonanova-400i', '400', 'italic'),
+  // metric-matched fallbacks to keep layout stable while fonts swap in
+  "@font-face{font-family:'Rubik Fallback';src:local('Arial'),local('Helvetica'),local('Liberation Sans');size-adjust:104%;ascent-override:90%;descent-override:24%}",
+  "@font-face{font-family:'Bona Nova Fallback';src:local('Georgia'),local('Times New Roman'),local('Liberation Serif');size-adjust:98%;ascent-override:95%;descent-override:28%}",
+].join('');
 // Demo lives on a kikkey.com subdomain: keep it out of search results so it never competes with kolbassnik.com.
 const noindex = import.meta.env.PUBLIC_INDEXABLE !== 'true';
 ---
@@ -26,6 +34,7 @@ const noindex = import.meta.env.PUBLIC_INDEXABLE !== 'true';
     <meta name="format-detection" content="telephone=no" />
     <script is:inline>document.documentElement.classList.replace('no-js', 'js');</script>
     {preload.map((href) => <link rel="preload" href={href} as="font" type="font/woff2" crossorigin />)}
+    <style is:inline set:html={fontCss} />
     <Seo lang={lang} title={t.meta.title} description={t.meta.description} ogImage={`/og/og-${lang}.jpg`} ogAlt={t.meta.ogAlt} noindex={noindex} />
     <link rel="icon" href="/icons/icon-32.png" sizes="32x32" type="image/png" />
     <link rel="icon" href="/icons/icon-192.png" sizes="192x192" type="image/png" />

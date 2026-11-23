@@ -5,7 +5,7 @@
  * state 'anim' — every layer present; scripts/motion/process.js drives it with a scrubbed timeline.
  * No text inside the SVG (all words live in HTML). In RTL the drawing is mirrored by CSS.
  */
-import SalamiSlice from './SalamiSlice.astro';
+import SalamiUse from './SalamiUse.astro';
 
 interface Props {
   state: 0 | 1 | 2 | 3 | 'anim';
@@ -125,12 +125,12 @@ const st = state === 'anim' ? 'anim' : `st-${state}`;
     <!-- slicing (chapter 4) -->
     <g class="l-cut">
       <g transform="translate(806 400) scale(0.2 0.41)">
-        <SalamiSlice seed={5} specks={60} pepper={10} nested uid={uid} />
+        <SalamiUse seed={5} inner />
       </g>
       {[0, 1, 2, 3].map((i) => (
         <g class="l-slice" style={`--i:${i}`}>
           <g transform={`translate(${880 + i * 70} ${402 - i * 3}) rotate(${-4 + i * 4}) scale(0.24 0.43)`}>
-            <SalamiSlice seed={6 + i * 4} specks={60} pepper={10} nested uid={uid} />
+            <SalamiUse seed={6 + i * 4} inner />
           </g>
         </g>
       ))}

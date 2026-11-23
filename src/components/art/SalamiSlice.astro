@@ -10,10 +10,9 @@ interface Props {
   class?: string;
   label?: string; // aria-label; omit → decorative
   tone?: 'raw' | 'cured';
-  nested?: boolean; // render as a nested <svg> inside another SVG (centred on 0,0, 220 units wide)
-  uid?: string; // unique suffix for gradient ids when the same seed is used several times
+  symbol?: boolean; // render as <symbol id="salami-{seed}"> for the page sprite (see SalamiSprite.astro)
 }
-const { seed = 7, specks = 90, pepper = 16, class: cls = '', label, tone = 'cured', nested = false, uid = '' } = Astro.props;
+const { seed = 7, specks = 90, pepper = 16, class: cls = '', label, tone = 'cured', symbol = false } = Astro.props;
 
 // mulberry32 PRNG
 function rng(a: number) {
@@ -27,7 +26,7 @@ function rng(a: number) {
 }
 const r = rng(seed);
 const R = 100; // radius in viewBox units (viewBox -110..110)
-const f = (n: number) => n.toFixed(1);
+const f = (n: number) => (symbol ? Math.round(n).toString() : n.toFixed(1));
 
 type Blob = { d: string };
 const fat: Blob[] = [];
@@ -74,36 +73,43 @@ while (peppers.length < pepper && pg++ < pepper * 60) {
   if (peppers.some((p) => Math.hypot(p.x - x, p.y - y) < 8)) continue;
   peppers.push({ x, y, s });
 }
-const id = `ss${seed}${uid ? `-${uid}` : ''}`;
+const id = `ss${seed}${symbol ? 's' : ''}`;
 const meatA = tone === 'raw' ? '#d9737a' : '#b0283f';
 const meatB = tone === 'raw' ? '#b84a56' : '#6e1634';
 ---
-<svg
-  class={nested ? undefined : `salami ${cls}`}
-  viewBox="-110 -110 220 220"
-  x={nested ? -110 : undefined}
-  y={nested ? -110 : undefined}
-  width={nested ? 220 : undefined}
-  height={nested ? 220 : undefined}
-  overflow={nested ? 'visible' : undefined}
-  role={label && !nested ? 'img' : undefined}
-  aria-label={nested ? undefined : label}
-  aria-hidden={label || nested ? undefined : 'true'}
-  focusable="false"
->
-  <defs>
-    <radialGradient id={`${id}m`} cx="0.42" cy="0.38" r="0.75">
-      <stop offset="0" stop-color={meatA} />
-      <stop offset="1" stop-color={meatB} />
-    </radialGradient>
-  </defs>
-  <circle r="106" class="salami__casing" fill="#3a0f1b" />
-  <circle r="101" class="salami__rim" fill="none" stroke="#e9d9c4" stroke-opacity=".35" stroke-width="1.2" />
-  <circle r="99" class="salami__meat" fill={`url(#${id}m)`} />
-  <g class="salami__fat" fill="#f2e2cf">
-    {fat.map((b) => <path d={b.d} />)}
-  </g>
-  <g class="salami__pepper" fill="#1c0c0c">
-    {peppers.map((p) => <circle cx={f(p.x)} cy={f(p.y)} r={f(p.s)} />)}
-  </g>
-</svg>
+{symbol ? (
+  <symbol id={`salami-${seed}`} viewBox="-110 -110 220 220">
+    <defs>
+      <radialGradient id={`${id}m`} cx="0.42" cy="0.38" r="0.75">
+        <stop offset="0" stop-color={meatA} />
+        <stop offset="1" stop-color={meatB} />
+      </radialGradient>
+    </defs>
+    <circle r="106" fill="#3a0f1b" />
+    <circle r="101" fill="none" stroke="#e9d9c4" stroke-opacity=".35" stroke-width="1.2" />
+    <circle r="99" fill={`url(#${id}m)`} />
+    <path fill="#f2e2cf" d={fat.map((b) => b.d).join('')} />
+    <path fill="#1c0c0c" d={peppers.map((p) => `M${f(p.x + p.s)} ${f(p.y)}a${f(p.s)} ${f(p.s)} 0 1 0 ${f(-2 * p.s)} 0a${f(p.s)} ${f(p.s)} 0 1 0 ${f(2 * p.s)} 0`).join('')} />
+  </symbol>
+) : (
+  <svg
+    class={`salami ${cls}`}
+    viewBox="-110 -110 220 220"
+    role={label ? 'img' : undefined}
+    aria-label={label}
+    aria-hidden={label ? undefined : 'true'}
+    focusable="false"
+  >
+    <defs>
+      <radialGradient id={`${id}m`} cx="0.42" cy="0.38" r="0.75">
+        <stop offset="0" stop-color={meatA} />
+        <stop offset="1" stop-color={meatB} />
+      </radialGradient>
+    </defs>
+    <circle r="106" class="salami__casing" fill="#3a0f1b" />
+    <circle r="101" class="salami__rim" fill="none" stroke="#e9d9c4" stroke-opacity=".35" stroke-width="1.2" />
+    <circle r="99" class="salami__meat" fill={`url(#${id}m)`} />
+    <path class="salami__fat" fill="#f2e2cf" d={fat.map((b) => b.d).join('')} />
+    <path class="salami__pepper" fill="#1c0c0c" d={peppers.map((p) => `M${f(p.x + p.s)} ${f(p.y)}a${f(p.s)} ${f(p.s)} 0 1 0 ${f(-2 * p.s)} 0a${f(p.s)} ${f(p.s)} 0 1 0 ${f(2 * p.s)} 0`).join('')} />
+  </svg>
+)}

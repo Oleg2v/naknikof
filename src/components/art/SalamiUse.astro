@@ -1,0 +1,14 @@
+---
+/** Reference a salami symbol from SalamiSprite. Inside another SVG pass `inner`; standalone renders its own <svg>. */
+interface Props {
+  seed: number;
+  inner?: boolean;
+  class?: string;
+}
+const { seed, inner = false, class: cls } = Astro.props;
+---
+{inner ? (
+  <use href={`#salami-${seed}`} x="-110" y="-110" width="220" height="220" />
+) : (
+  <svg class={cls} viewBox="-110 -110 220 220" aria-hidden="true" focusable="false"><use href={`#salami-${seed}`} /></svg>
+)}

@@ -23,6 +23,8 @@ export const he: Copy = {
     whatsapp: 'Написать в WhatsApp',
     newTab: 'откроется в новой вкладке',
     logo: 'Kolbassnik — на главную',
+    home: 'главная',
+    langCurrent: 'Сейчас',
   },
   topbar: [
     'Бесплатная доставка при заказе от 370 ₪',

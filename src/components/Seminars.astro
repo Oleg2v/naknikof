@@ -5,7 +5,7 @@
  */
 import { Image } from 'astro:assets';
 import data from '../../data/seminars.json';
-import SalamiSlice from './art/SalamiSlice.astro';
+import SalamiUse from './art/SalamiUse.astro';
 import { formatDay, formatWeekday, formatTime, dayNumber, monthShort, formatPrice } from '../lib/format';
 import { waLink } from '../data/store';
 import type { Copy } from '../i18n/ru';
@@ -74,7 +74,7 @@ const signup = (s: Item) =>
                     <Image src={photo} alt="" widths={[240, 480]} sizes="240px" loading="lazy" />
                   ) : (
                     <>
-                      <SalamiSlice seed={31 + i * 7} specks={70} pepper={12} />
+                      <SalamiUse seed={[31, 38, 45][i % 3]} />
                       {data.demo && <span class="ph__tag">{t.seminars.photoNeeded}</span>}
                     </>
                   )}
