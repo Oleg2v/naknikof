@@ -1,0 +1,22 @@
+{
+  // Cloudflare Worker with Static Assets (the successor of Cloudflare Pages: same edge CDN,
+  // plus a tiny API for review comments in the same deploy, same origin, no CORS).
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "kolbassnik",
+  "main": "worker/index.js",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "run_worker_first": ["/", "/api/*"],
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page"
+  },
+  "durable_objects": {
+    "bindings": [{ "name": "COMMENTS", "class_name": "CommentsStore" }]
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["CommentsStore"] }],
+  "routes": [{ "pattern": "kolbassnik.kikkey.com", "custom_domain": true }],
+  "vars": { "SITE_URL": "https://kolbassnik.kikkey.com" },
+  "observability": { "enabled": true }
+}
