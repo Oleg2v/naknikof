@@ -30,7 +30,7 @@ const { t } = Astro.props;
       </div>
       <svg class="hero__orbit" viewBox="0 0 400 400" data-hero-orbit>
         <defs><path id="orbit" d="M200 200m-186 0a186 186 0 1 1 372 0a186 186 0 1 1-372 0" /></defs>
-        <text><textPath href="#orbit">{t.process.chapters.map((c) => c.word).join('  ·  ')}  ·  {t.process.chapters.map((c) => c.word).join('  ·  ')}  ·</textPath></text>
+        <text><textPath href="#orbit" startOffset={t.lang === 'he' ? '50%' : undefined}>{t.process.chapters.map((c) => c.word).join('  ·  ')}  ·  {t.process.chapters.map((c) => c.word).join('  ·  ')}  ·</textPath></text>
       </svg>
     </div>
 

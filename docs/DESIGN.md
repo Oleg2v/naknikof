@@ -134,7 +134,7 @@
 Бюджет: LCP < 2.5 с, CLS < 0.1, INP < 200 мс, Lighthouse mobile ≥ 90. Результат (продакшн, мобильный профиль): **Performance 98–99, LCP ≈ 2.2 с, TBT ≈ 0 мс, CLS 0**, Accessibility 100, Best Practices 100.
 
 - HTML со встроенным критическим CSS, без блокирующих скриптов; H1 — текст, видим с первого кадра.
-- JS на телефоне: ~3 КБ (появление, калькулятор). GSAP + ScrollTrigger + Lenis — только десктоп, после `load`, в `requestIdleCallback`.
+- JS на телефоне: ≈ 4 КБ gzip (появление, меню, калькулятор). GSAP + ScrollTrigger + Lenis (≈ 51 КБ gzip) — только десктоп, после `load`, в `requestIdleCallback`.
 - `content-visibility: auto` для секций ниже истории; один SVG-спрайт для всех «срезов» (DOM ≈ 1600 узлов).
 - AVIF/WebP + `srcset` + `loading="lazy"`; шрифты по языку; иммутабельный кэш для ассетов.
 - Скрипт комментариев грузится только по запросу.

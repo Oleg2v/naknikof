@@ -7,7 +7,7 @@ const path = require('path');
 const base = process.argv[2] || 'http://127.0.0.1:8787';
 const COPY = {
   ru: { lines: ['Всё для', 'домашней', 'колбасы'], tail: 'в Израиле', foot: 'Оболочки · нитритная соль · специи · щепа · оборудование', badge: 'kolbassnik.com' },
-  he: { lines: ['כל מה', 'שצריך לנקניק', 'ביתי'], tail: 'בישראל', foot: 'מעטפות · מלח ניטריט · תבלינים · שבבי עישון · ציוד', badge: 'kolbassnik.com' },
+  he: { lines: ['הכול', 'לנקניק', 'ביתי'], tail: 'בישראל', foot: 'מעטפות · מלח ניטריט · תבלינים · שבבי עישון · ציוד', badge: 'kolbassnik.com' },
 };
 (async () => {
   const b = await chromium.launch();
